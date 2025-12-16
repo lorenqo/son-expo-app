@@ -1,11 +1,13 @@
+import { router } from 'expo-router'
 import React, { useState } from 'react'
-import { View, Text, TextInput, Pressable, Modal, ActivityIndicator, StyleSheet } from 'react-native'
-import { loginRequest } from '../services/auth'
+import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useAuth } from '../context/AuthContext'
+import { loginRequest } from '../services/auth'
 
 type Props = {
   visible: boolean
   onClose: () => void
+  autoLogin?: boolean
 }
 
 export default function LoginPopup({ visible, onClose }: Props) {
@@ -30,7 +32,7 @@ export default function LoginPopup({ visible, onClose }: Props) {
       const user = response?.user
 
       if (!user) {
-        setError('Пользователь не найден')
+        setError('Неверный email или пароль')
         return
       }
 
@@ -43,11 +45,16 @@ export default function LoginPopup({ visible, onClose }: Props) {
       })
 
       onClose()
-    } catch (e) {
+    } catch {
       setError('Ошибка соединения с сервером')
     } finally {
       setLoading(false)
     }
+  }
+
+  const openRegister = () => {
+    onClose()
+    router.push('../(auth)/register')
   }
 
   return (
@@ -60,15 +67,22 @@ export default function LoginPopup({ visible, onClose }: Props) {
 
           <Text style={styles.title}>Вход</Text>
 
-          <TextInput placeholder="Email" placeholderTextColor="#8f8f8fff" value={email} onChangeText={setEmail} autoCapitalize="none" style={styles.input} />
+          <TextInput placeholder="Email" placeholderTextColor="#8f8f8f" value={email} onChangeText={setEmail} autoCapitalize="none" style={styles.input} />
 
-          <TextInput placeholder="Пароль" placeholderTextColor="#8f8f8fff" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
+          <TextInput placeholder="Пароль" placeholderTextColor="#8f8f8f" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
           <Pressable style={styles.button} onPress={handleLogin} disabled={loading}>
             {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Войти</Text>}
           </Pressable>
+
+          {/* РЕГИСТРАЦИЯ */}
+          <Pressable onPress={openRegister} style={styles.registerBtn}>
+            <Text style={styles.registerText}>Создать аккаунт</Text>
+          </Pressable>
+
+          <Text style={styles.hint}>Регистрация проходит на сайте LiveExpert</Text>
         </View>
       </View>
     </Modal>
@@ -116,9 +130,24 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 6,
   },
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  registerBtn: {
+    marginTop: 16,
+  },
+  registerText: {
+    textAlign: 'center',
+    color: '#2e7d32',
+    fontWeight: '600',
+  },
+  hint: {
+    marginTop: 6,
+    fontSize: 12,
+    textAlign: 'center',
+    color: '#777',
   },
 })

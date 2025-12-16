@@ -1,12 +1,37 @@
-import { View, Text, Image, Pressable, StyleSheet } from 'react-native'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useState } from 'react'
-import { useAuth } from '../../context/AuthContext'
 import LoginPopup from '../../components/LoginPopup'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Profile() {
   const { user, logout } = useAuth()
+  const { showLogin, autoLogin } = useLocalSearchParams()
+
   const [loginOpen, setLoginOpen] = useState(false)
+  const [autoLoginMode, setAutoLoginMode] = useState(false)
+
+  // 🔔 Реакция на переходы из WebView
+  useEffect(() => {
+    if (autoLogin === '1') {
+      setAutoLoginMode(true)
+      setLoginOpen(true)
+    } else if (showLogin === '1') {
+      setAutoLoginMode(false)
+      setLoginOpen(true)
+    }
+  }, [autoLogin, showLogin])
+
+  // 🧹 Убираем параметры после закрытия попапа
+  const closeLogin = () => {
+    setLoginOpen(false)
+    setAutoLoginMode(false)
+    router.setParams({
+      showLogin: undefined,
+      autoLogin: undefined,
+    })
+  }
 
   // ❌ НЕ ЗАЛОГИНЕН
   if (!user) {
@@ -19,7 +44,7 @@ export default function Profile() {
             <Text style={styles.buttonText}>Войти</Text>
           </Pressable>
 
-          <LoginPopup visible={loginOpen} onClose={() => setLoginOpen(false)} />
+          <LoginPopup visible={loginOpen} autoLogin={autoLoginMode} onClose={closeLogin} />
         </View>
       </SafeAreaView>
     )
@@ -31,12 +56,12 @@ export default function Profile() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.center}>
-        {avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />}
+        {avatarUrl && <Image source={{ uri: `https://c.liveexpert.org/public/images/photo/4602509-mini?nocache=${avatarUrl}` }} style={styles.avatar} />}
 
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.balance}>Баланс: {user.balance} ₽</Text>
 
-        {/* 🚪 КНОПКА ВЫХОДА */}
+        {/* 🚪 ВЫХОД */}
         <Pressable style={styles.logout} onPress={logout}>
           <Text style={styles.logoutText}>Выйти</Text>
         </Pressable>
