@@ -1,0 +1,6 @@
+export default {
+  login: 'Login',
+  register: 'Register',
+  email: 'Email',
+  password: 'Password',
+}

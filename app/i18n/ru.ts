@@ -1,0 +1,6 @@
+export default {
+  login: 'Вход',
+  register: 'Регистрация',
+  email: 'Почта',
+  password: 'Пароль',
+}
