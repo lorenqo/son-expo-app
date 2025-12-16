@@ -7,30 +7,19 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function Profile() {
   const { user, logout } = useAuth()
-  const { showLogin, autoLogin } = useLocalSearchParams()
+  const { login } = useLocalSearchParams()
 
   const [loginOpen, setLoginOpen] = useState(false)
-  const [autoLoginMode, setAutoLoginMode] = useState(false)
 
-  // 🔔 Реакция на переходы из WebView
   useEffect(() => {
-    if (autoLogin === '1') {
-      setAutoLoginMode(true)
-      setLoginOpen(true)
-    } else if (showLogin === '1') {
-      setAutoLoginMode(false)
+    if (login === '1') {
       setLoginOpen(true)
     }
-  }, [autoLogin, showLogin])
+  }, [login])
 
-  // 🧹 Убираем параметры после закрытия попапа
   const closeLogin = () => {
     setLoginOpen(false)
-    setAutoLoginMode(false)
-    router.setParams({
-      showLogin: undefined,
-      autoLogin: undefined,
-    })
+    router.setParams({ login: undefined })
   }
 
   // ❌ НЕ ЗАЛОГИНЕН
@@ -44,24 +33,20 @@ export default function Profile() {
             <Text style={styles.buttonText}>Войти</Text>
           </Pressable>
 
-          <LoginPopup visible={loginOpen} autoLogin={autoLoginMode} onClose={closeLogin} />
+          <LoginPopup visible={loginOpen} onClose={closeLogin} />
         </View>
       </SafeAreaView>
     )
   }
 
-  // ✅ ЗАЛОГИНЕН
-  const avatarUrl = user.pic ? `https://m.liveexpert.org/images/users/${user.pic}.jpg` : null
-
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.center}>
-        {avatarUrl && <Image source={{ uri: `https://c.liveexpert.org/public/images/photo/4602509-mini?nocache=${avatarUrl}` }} style={styles.avatar} />}
+        <Image source={{ uri: `https://c.liveexpert.org/public/images/photo/${user.id}-mini?nocache=${user.pic}` }} style={styles.avatar} />
 
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.balance}>Баланс: {user.balance} ₽</Text>
 
-        {/* 🚪 ВЫХОД */}
         <Pressable style={styles.logout} onPress={logout}>
           <Text style={styles.logoutText}>Выйти</Text>
         </Pressable>
@@ -71,9 +56,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
   center: {
     flex: 1,
     alignItems: 'center',

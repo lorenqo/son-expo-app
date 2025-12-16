@@ -1,32 +1,32 @@
 import { router } from 'expo-router'
+import { useRef } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { WebView } from 'react-native-webview'
 
 export default function RegisterScreen() {
+  const handledRef = useRef(false)
+
   return (
     <SafeAreaView style={styles.safe}>
       <WebView
         source={{ uri: 'https://www.liveexpert.org/login/register' }}
         incognito
         onNavigationStateChange={(nav) => {
-          if (nav.url.includes('/profile/welcome')) {
-            router.replace({
-              pathname: '/profile',
-              params: {
-                autoLogin: '1',
-              },
-            })
+          if (handledRef.current) return
+
+          const url = nav.url
+
+          // ✔ регистрация завершена
+          if (url.includes('/profile/welcome')) {
+            handledRef.current = true
+            router.replace('/profile?login=1')
           }
 
-          // АККАУНТ УЖЕ СУЩЕСТВУЕТ
-          if (nav.url.endsWith('/login')) {
-            router.replace({
-              pathname: '/profile',
-              params: {
-                showLogin: '1',
-              },
-            })
+          // ✔ аккаунт уже существует
+          if (url.endsWith('/login')) {
+            handledRef.current = true
+            router.replace('/profile?login=1')
           }
         }}
       />
