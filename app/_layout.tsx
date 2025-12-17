@@ -1,10 +1,15 @@
 import { Stack } from 'expo-router'
-import { AuthProvider } from '../context/AuthContext'
+import { useEffect, useState } from 'react'
+import { hydrateAuth } from '../store/authStore'
 
 export default function RootLayout() {
-  return (
-    <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </AuthProvider>
-  )
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    hydrateAuth().finally(() => setReady(true))
+  }, [])
+
+  if (!ready) return null // или splash
+
+  return <Stack screenOptions={{ headerShown: false }} />
 }

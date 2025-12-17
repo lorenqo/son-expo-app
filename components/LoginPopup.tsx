@@ -1,8 +1,8 @@
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { useAuth } from '../context/AuthContext'
 import { loginRequest } from '../services/auth'
+import { login } from '../store/authStore'
 
 type Props = {
   visible: boolean
@@ -11,8 +11,6 @@ type Props = {
 }
 
 export default function LoginPopup({ visible, onClose }: Props) {
-  const { login } = useAuth()
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -36,7 +34,7 @@ export default function LoginPopup({ visible, onClose }: Props) {
         return
       }
 
-      login({
+      await login({
         id: user.id,
         email: user.email,
         name: user.name,

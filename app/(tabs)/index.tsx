@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../store/useAuth'
 
 export default function Index() {
   const { user } = useAuth()

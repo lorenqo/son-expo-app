@@ -1,30 +1,16 @@
-import { router, useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 import LoginPopup from '../../components/LoginPopup'
-import { useAuth } from '../../context/AuthContext'
+import { logout } from '../../store/authStore'
+import { useAuth } from '../../store/useAuth'
 
 export default function Profile() {
-  const { user, logout } = useAuth()
-  const { login } = useLocalSearchParams()
-
+  const { user, hydrated } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
 
-  // Открытие логина по query-параметру ?login=1
-  useEffect(() => {
-    if (login === '1') {
-      setLoginOpen(true)
-    }
-  }, [login])
+  if (!hydrated) return null
 
-  const closeLogin = () => {
-    setLoginOpen(false)
-    router.setParams({ login: undefined })
-  }
-
-  // ❌ НЕ ЗАЛОГИНЕН
   if (!user) {
     return (
       <SafeAreaView style={styles.safe}>
@@ -35,13 +21,11 @@ export default function Profile() {
             <Text style={styles.buttonText}>Войти</Text>
           </Pressable>
 
-          <LoginPopup visible={loginOpen} onClose={closeLogin} />
+          <LoginPopup visible={loginOpen} onClose={() => setLoginOpen(false)} />
         </View>
       </SafeAreaView>
     )
   }
-
-  // ✅ ЗАЛОГИНЕН
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -60,9 +44,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
+  safe: { flex: 1 },
   center: {
     flex: 1,
     alignItems: 'center',
