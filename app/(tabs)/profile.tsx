@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
 import LoginPopup from '../../components/LoginPopup'
 import { useAuth } from '../../context/AuthContext'
 
@@ -11,6 +12,7 @@ export default function Profile() {
 
   const [loginOpen, setLoginOpen] = useState(false)
 
+  // Открытие логина по query-параметру ?login=1
   useEffect(() => {
     if (login === '1') {
       setLoginOpen(true)
@@ -39,6 +41,8 @@ export default function Profile() {
     )
   }
 
+  // ✅ ЗАЛОГИНЕН
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.center}>
@@ -56,7 +60,9 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: {
+    flex: 1,
+  },
   center: {
     flex: 1,
     alignItems: 'center',

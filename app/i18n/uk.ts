@@ -1,6 +1,14 @@
 export default {
-  login: 'Вхід',
-  register: 'Реєстрація',
-  email: 'Пошта',
-  password: 'Пароль',
+  common: {
+    login: 'Увійти',
+    logout: 'Вийти',
+    close: 'Закрити',
+  },
+  auth: {
+    notLogged: 'Ви не увійшли',
+    loginTitle: 'Вхід',
+  },
+  profile: {
+    balance: 'Баланс',
+  },
 }

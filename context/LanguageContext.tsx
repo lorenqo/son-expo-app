@@ -1,24 +1,31 @@
 import { createContext, useContext, useState } from 'react'
+import { dictionaries, Lang } from '../app/i18n'
 
-export type Language = 'ru' | 'uk' | 'en'
-
-type LanguageContextType = {
-  language: Language
-  setLanguage: (lang: Language) => void
+type LangContextType = {
+  lang: Lang
+  t: typeof dictionaries.ru
+  setLang: (l: Lang) => void
 }
 
-const LanguageContext = createContext<LanguageContextType | null>(null)
+const LanguageContext = createContext<LangContextType | null>(null)
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>('ru')
+  const [lang, setLang] = useState<Lang>('ru')
 
-  return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>
+  return (
+    <LanguageContext.Provider
+      value={{
+        lang,
+        setLang,
+        t: dictionaries[lang],
+      }}>
+      {children}
+    </LanguageContext.Provider>
+  )
 }
 
-export function useLanguage() {
+export function useLang() {
   const ctx = useContext(LanguageContext)
-  if (!ctx) {
-    throw new Error('useLanguage must be used inside LanguageProvider')
-  }
+  if (!ctx) throw new Error('useLang must be inside LanguageProvider')
   return ctx
 }

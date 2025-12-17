@@ -1,6 +1,14 @@
 export default {
-  login: 'Login',
-  register: 'Register',
-  email: 'Email',
-  password: 'Password',
+  common: {
+    login: 'Sign in',
+    logout: 'Log out',
+    close: 'Close',
+  },
+  auth: {
+    notLogged: 'You are not logged in',
+    loginTitle: 'Login',
+  },
+  profile: {
+    balance: 'Balance',
+  },
 }
