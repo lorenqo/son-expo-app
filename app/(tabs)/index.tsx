@@ -9,7 +9,7 @@ export default function Index() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <Text style={styles.title}>Главная</Text>
-        <Text style={styles.text}>{user ? `Вы вошли как ${user.email}` : 'Вы не авторизованы'}</Text>
+        <Text style={styles.text}>{user ? `Вы вошли как ${user.name}` : 'Вы не авторизованы'}</Text>
       </View>
     </SafeAreaView>
   )

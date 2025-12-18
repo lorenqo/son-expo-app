@@ -1,7 +1,6 @@
-import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { loginRequest } from '../services/auth'
+import { checkEmail, loginRequest, registerRequest } from '../services/auth'
 import { login } from '../store/authStore'
 
 type Props = {
@@ -11,17 +10,66 @@ type Props = {
 }
 
 export default function LoginPopup({ visible, onClose }: Props) {
+  type Mode = 'login' | 'register'
+
+  const [emailError, setEmailError] = useState('')
+  const [checkingEmail, setCheckingEmail] = useState(false)
+  const [mode, setMode] = useState<Mode>('login')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const passwordError = mode === 'register' ? validatePassword(password) : null
+  const isSubmitDisabled = loading || checkingEmail || Boolean(emailError) || Boolean(passwordError)
 
-  const handleLogin = async () => {
+  function validatePassword(password: string): string | null {
+    if (!password) {
+      return 'Введите пароль'
+    }
+
+    if (password.length < 6) {
+      return 'Пароль должен быть не менее 6 символов'
+    }
+
+    if (!/[A-Za-z]/.test(password)) {
+      return 'Пароль должен содержать латинские буквы'
+    }
+
+    if (!/\d/.test(password)) {
+      return 'Пароль должен содержать цифры'
+    }
+
+    return null // пароль валиден
+  }
+
+  const handleEmailBlur = async () => {
+    if (!email || !email.includes('@')) return
+
+    try {
+      setCheckingEmail(true)
+      setEmailError('')
+
+      const permission = await checkEmail(email)
+
+      if (mode === 'register' && !permission) {
+        setEmailError('Аккаунт с таким email уже существует')
+      }
+
+      if (mode === 'login' && permission) {
+        setEmailError('Аккаунт с таким email не найден')
+      }
+    } catch {
+      // тут можно молча игнорировать или показать общую ошибку
+    } finally {
+      setCheckingEmail(false)
+    }
+  }
+  const loginUser = async () => {
     if (!email || !password) {
       setError('Введите email и пароль')
       return
     }
-
     try {
       setLoading(true)
       setError('')
@@ -49,10 +97,46 @@ export default function LoginPopup({ visible, onClose }: Props) {
       setLoading(false)
     }
   }
+  const registerUser = async () => {
+    if (!name || !email || !password) {
+      setError('Заполните все поля')
+      return
+    }
+
+    const passwordError = validatePassword(password)
+
+    if (passwordError) {
+      setError(passwordError)
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError('')
+
+      const response = await registerRequest(name, email, password)
+      console.log(response)
+      loginUser()
+    } catch {
+      setError('Ошибка соединения с сервером')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (mode === 'login') {
+      await loginUser()
+    } else {
+      await registerUser()
+    }
+
+    onClose()
+  }
 
   const openRegister = () => {
-    onClose()
-    router.push('../(auth)/register')
+    setError('')
+    setMode('register')
   }
 
   return (
@@ -63,24 +147,54 @@ export default function LoginPopup({ visible, onClose }: Props) {
             <Text style={styles.closeText}>✕</Text>
           </Pressable>
 
-          <Text style={styles.title}>Вход</Text>
+          <Text style={styles.title}>{mode === 'login' ? 'Вход' : 'Регистрация'}</Text>
 
-          <TextInput placeholder="Email" placeholderTextColor="#8f8f8f" value={email} onChangeText={setEmail} autoCapitalize="none" style={styles.input} />
+          {mode === 'register' && <TextInput placeholder="Имя" placeholderTextColor="#8f8f8f" value={name} onChangeText={setName} style={styles.input} />}
 
-          <TextInput placeholder="Пароль" placeholderTextColor="#8f8f8f" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#8f8f8f"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text)
+              setEmailError('')
+            }}
+            onBlur={handleEmailBlur}
+            autoCapitalize="none"
+            style={styles.input}
+          />
+          {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+
+          <TextInput
+            placeholder="Пароль"
+            placeholderTextColor="#8f8f8f"
+            value={password}
+            secureTextEntry
+            onChangeText={(text) => {
+              setPassword(text)
+              setError('')
+            }}
+            style={styles.input}
+          />
+
+          {mode === 'register' && password && <Text style={styles.hint}>Пароль должен быть не короче 6 символов и содержать цифры</Text>}
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Pressable style={styles.button} onPress={handleLogin} disabled={loading}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Войти</Text>}
+          <Pressable style={[styles.button, isSubmitDisabled && styles.buttonDisabled]} onPress={handleSubmit} disabled={isSubmitDisabled}>
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{mode === 'login' ? 'Войти' : 'Зарегистрироваться'}</Text>}
           </Pressable>
+          {mode === 'login' && (
+            <Pressable onPress={openRegister} style={styles.registerBtn}>
+              <Text style={styles.registerText}>Создать аккаунт</Text>
+            </Pressable>
+          )}
 
-          {/* РЕГИСТРАЦИЯ */}
-          <Pressable onPress={openRegister} style={styles.registerBtn}>
-            <Text style={styles.registerText}>Создать аккаунт</Text>
-          </Pressable>
-
-          <Text style={styles.hint}>Регистрация проходит на сайте LiveExpert</Text>
+          {mode === 'register' && (
+            <Pressable onPress={() => setMode('login')} style={styles.registerBtn}>
+              <Text style={styles.registerText}>У меня уже есть аккаунт</Text>
+            </Pressable>
+          )}
         </View>
       </View>
     </Modal>
@@ -133,6 +247,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  buttonDisabled: {
+    backgroundColor: '#c8e6c9',
   },
   registerBtn: {
     marginTop: 16,
