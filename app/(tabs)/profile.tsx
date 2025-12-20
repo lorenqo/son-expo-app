@@ -36,18 +36,6 @@ export default function Profile() {
             <Text style={styles.buttonText}>{t('auth.loginButton')}</Text>
           </Pressable>
 
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('en-US')}>
-            <Text style={styles.flagText}>🇺🇸</Text>
-          </Pressable>
-
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ru-RU')}>
-            <Text style={styles.flagText}>ru</Text>
-          </Pressable>
-
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ua-UA')}>
-            <Text style={styles.flagText}>ua</Text>
-          </Pressable>
-
           <LoginPopup visible={loginOpen} onClose={() => setLoginOpen(false)} />
         </View>
       </SafeAreaView>
@@ -64,7 +52,19 @@ export default function Profile() {
         <Text style={styles.balance}>
           {t('profile.balance')}: {user.balance} ₽
         </Text>
+        <View style={styles.language}>
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('en-US')}>
+            <Text style={styles.flagText}>🇺🇸</Text>
+          </Pressable>
 
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ru-RU')}>
+            <Text style={styles.flagText}>🇷🇺</Text>
+          </Pressable>
+
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ua-UA')}>
+            <Text style={styles.flagText}>🇺🇦</Text>
+          </Pressable>
+        </View>
         <Pressable style={styles.logout} onPress={logout}>
           <Text style={styles.logoutText}>{t('profile.logout')}</Text>
         </Pressable>
@@ -110,6 +110,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  language: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   flagButton: {
     padding: 15,
     borderRadius: 10,
@@ -117,6 +122,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 80,
+    margin: 10,
   },
   buttonPressed: {
     opacity: 0.7,
