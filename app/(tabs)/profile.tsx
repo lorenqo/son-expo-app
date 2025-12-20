@@ -1,4 +1,7 @@
+import '@/src/i18n'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import LoginPopup from '../../components/LoginPopup'
@@ -8,6 +11,18 @@ import { useAuth } from '../../store/useAuth'
 export default function Profile() {
   const { user, hydrated } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
+  const { t, i18n } = useTranslation()
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL
+
+  const handleLanguageChange = async (language: string) => {
+    try {
+      const LANGUAGE_KEY = '@app_language'
+      await i18n.changeLanguage(language)
+      await AsyncStorage.setItem(LANGUAGE_KEY, language)
+    } catch (error) {
+      console.error('Error changing language:', error)
+    }
+  }
 
   if (!hydrated) return null
 
@@ -15,10 +30,22 @@ export default function Profile() {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.center}>
-          <Text style={styles.title}>Вы не вошли</Text>
+          <Text style={styles.title}>{t('profile.notLoggedIn')}</Text>
 
           <Pressable style={styles.button} onPress={() => setLoginOpen(true)}>
-            <Text style={styles.buttonText}>Войти</Text>
+            <Text style={styles.buttonText}>{t('auth.loginButton')}</Text>
+          </Pressable>
+
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('en-US')}>
+            <Text style={styles.flagText}>🇺🇸</Text>
+          </Pressable>
+
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ru-RU')}>
+            <Text style={styles.flagText}>ru</Text>
+          </Pressable>
+
+          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ua-UA')}>
+            <Text style={styles.flagText}>ua</Text>
           </Pressable>
 
           <LoginPopup visible={loginOpen} onClose={() => setLoginOpen(false)} />
@@ -30,13 +57,16 @@ export default function Profile() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.center}>
-        <Image source={{ uri: `https://c.liveexpert.org/public/images/photo/${user.id}-mini?nocache=${user.pic}` }} style={styles.avatar} />
+        <Image source={{ uri: `${apiUrl}/public/images/photo/${user.id}-mini?nocache=${user.pic}` }} style={styles.avatar} />
 
         <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.balance}>Баланс: {user.balance} ₽</Text>
+
+        <Text style={styles.balance}>
+          {t('profile.balance')}: {user.balance} ₽
+        </Text>
 
         <Pressable style={styles.logout} onPress={logout}>
-          <Text style={styles.logoutText}>Выйти</Text>
+          <Text style={styles.logoutText}>{t('profile.logout')}</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -79,6 +109,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  flagButton: {
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 80,
+  },
+  buttonPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
+  },
+  flagText: {
+    fontSize: 24,
   },
   logout: {
     marginTop: 12,

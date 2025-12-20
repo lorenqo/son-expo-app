@@ -1,0 +1,47 @@
+{
+  "index": {
+    "tab_name": "Home",
+    "title": "Home",
+    "notLogined": "You are not logged in",
+    "loginedUs": "You are logged in as"
+  },
+  "settings": {
+    "tab_name": "Settings",
+    "title": "Settings",
+    "inDevelopment": "In development"
+  },
+  "dreams": {
+    "tab_name": "Dreams",
+    "title": "Dreams",
+    "inDevelopment": "This section is under development"
+  },
+  "profile": {
+    "tab_name": "Profile",
+    "notLoggedIn": "You are not logged in",
+    "balance": "Balance",
+    "logout": "Log out"
+  },
+
+  "auth": {
+    "loginTitle": "Login",
+    "registerTitle": "Registration",
+
+    "namePlaceholder": "Name",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+
+    "loginButton": "Log in",
+    "registerButton": "Sign up",
+
+    "createAccount": "Create an account",
+    "haveAccount": "I already have an account",
+
+    "errorEmptyFields": "Please enter email and password",
+    "errorServer": "Server connection error",
+
+    "emailExists": "An account with this email already exists",
+    "emailNotFound": "Account with this email was not found",
+
+    "passwordHint": "Password must be at least 6 characters long and contain numbers and Latin letters"
+  }
+}

@@ -1,15 +1,17 @@
+import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAuth } from '../../store/useAuth'
 
 export default function Index() {
   const { user } = useAuth()
+  const { t } = useTranslation()
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <Text style={styles.title}>Главная</Text>
-        <Text style={styles.text}>{user ? `Вы вошли как ${user.name}` : 'Вы не авторизованы'}</Text>
+        <Text style={styles.title}>{t('index.title')}</Text>
+        <Text style={styles.text}>{user ? `${t('index.loginedUs')} ${user.name}` : t('index.notLogined')}</Text>
       </View>
     </SafeAreaView>
   )

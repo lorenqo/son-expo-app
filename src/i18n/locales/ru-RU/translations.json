@@ -1,0 +1,47 @@
+{
+  "index": {
+    "tab_name": "Главная",
+    "title": "Главная",
+    "notLogined": "Вы не авторизованы",
+    "loginedUs": "Вы вошли как"
+  },
+  "settings": {
+    "tab_name": "Настройки",
+    "title": "Настройки",
+    "inDevelopment": "В разработке"
+  },
+  "dreams": {
+    "tab_name": "Сны",
+    "title": "Сны",
+    "inDevelopment": "Раздел находится в разработке"
+  },
+  "profile": {
+    "tab_name": "Профиль",
+    "notLoggedIn": "Вы не вошли",
+    "balance": "Баланс",
+    "logout": "Выйти"
+  },
+
+  "auth": {
+    "loginTitle": "Вход",
+    "registerTitle": "Регистрация",
+
+    "namePlaceholder": "Имя",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Пароль",
+
+    "loginButton": "Войти",
+    "registerButton": "Зарегистрироваться",
+
+    "createAccount": "Создать аккаунт",
+    "haveAccount": "У меня уже есть аккаунт",
+
+    "errorEmptyFields": "Введите email и пароль",
+    "errorServer": "Ошибка соединения с сервером",
+
+    "emailExists": "Аккаунт с таким email уже существует",
+    "emailNotFound": "Аккаунт с таким email не найден",
+
+    "passwordHint": "Пароль должен быть не менее 6 символов, содержать цифры и латинские буквы"
+  }
+}

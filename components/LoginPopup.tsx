@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { checkEmail, loginRequest, registerRequest } from '../services/auth'
 import { login } from '../store/authStore'
@@ -11,6 +12,7 @@ type Props = {
 
 export default function LoginPopup({ visible, onClose }: Props) {
   type Mode = 'login' | 'register'
+  const { t } = useTranslation()
 
   const [emailError, setEmailError] = useState('')
   const [checkingEmail, setCheckingEmail] = useState(false)
@@ -25,22 +27,14 @@ export default function LoginPopup({ visible, onClose }: Props) {
 
   function validatePassword(password: string): string | null {
     if (!password) {
-      return 'Введите пароль'
+      return t('auth.errorEmptyFields')
     }
 
-    if (password.length < 6) {
-      return 'Пароль должен быть не менее 6 символов'
+    if (password.length < 6 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      return t('auth.passwordHint')
     }
 
-    if (!/[A-Za-z]/.test(password)) {
-      return 'Пароль должен содержать латинские буквы'
-    }
-
-    if (!/\d/.test(password)) {
-      return 'Пароль должен содержать цифры'
-    }
-
-    return null // пароль валиден
+    return null
   }
 
   const handleEmailBlur = async () => {
@@ -53,23 +47,24 @@ export default function LoginPopup({ visible, onClose }: Props) {
       const permission = await checkEmail(email)
 
       if (mode === 'register' && !permission) {
-        setEmailError('Аккаунт с таким email уже существует')
+        setEmailError(t('auth.emailExists'))
       }
 
       if (mode === 'login' && permission) {
-        setEmailError('Аккаунт с таким email не найден')
+        setEmailError(t('auth.emailNotFound'))
       }
     } catch {
-      // тут можно молча игнорировать или показать общую ошибку
     } finally {
       setCheckingEmail(false)
     }
   }
+
   const loginUser = async () => {
     if (!email || !password) {
-      setError('Введите email и пароль')
+      setError(t('auth.errorEmptyFields'))
       return
     }
+
     try {
       setLoading(true)
       setError('')
@@ -78,7 +73,7 @@ export default function LoginPopup({ visible, onClose }: Props) {
       const user = response?.user
 
       if (!user) {
-        setError('Неверный email или пароль')
+        setError(t('auth.errorEmptyFields'))
         return
       }
 
@@ -92,19 +87,19 @@ export default function LoginPopup({ visible, onClose }: Props) {
 
       onClose()
     } catch {
-      setError('Ошибка соединения с сервером')
+      setError(t('auth.errorServer'))
     } finally {
       setLoading(false)
     }
   }
+
   const registerUser = async () => {
     if (!name || !email || !password) {
-      setError('Заполните все поля')
+      setError(t('auth.errorEmptyFields'))
       return
     }
 
     const passwordError = validatePassword(password)
-
     if (passwordError) {
       setError(passwordError)
       return
@@ -114,11 +109,11 @@ export default function LoginPopup({ visible, onClose }: Props) {
       setLoading(true)
       setError('')
 
-      const response = await registerRequest(name, email, password)
-      console.log(response)
+      await registerRequest(name, email, password)
       loginUser()
+      onClose()
     } catch {
-      setError('Ошибка соединения с сервером')
+      setError(t('auth.errorServer'))
     } finally {
       setLoading(false)
     }
@@ -130,8 +125,6 @@ export default function LoginPopup({ visible, onClose }: Props) {
     } else {
       await registerUser()
     }
-
-    onClose()
   }
 
   const openRegister = () => {
@@ -147,12 +140,12 @@ export default function LoginPopup({ visible, onClose }: Props) {
             <Text style={styles.closeText}>✕</Text>
           </Pressable>
 
-          <Text style={styles.title}>{mode === 'login' ? 'Вход' : 'Регистрация'}</Text>
+          <Text style={styles.title}>{mode === 'login' ? t('auth.loginTitle') : t('auth.registerTitle')}</Text>
 
-          {mode === 'register' && <TextInput placeholder="Имя" placeholderTextColor="#8f8f8f" value={name} onChangeText={setName} style={styles.input} />}
+          {mode === 'register' && <TextInput placeholder={t('auth.namePlaceholder')} placeholderTextColor="#8f8f8f" value={name} onChangeText={setName} style={styles.input} />}
 
           <TextInput
-            placeholder="Email"
+            placeholder={t('auth.emailPlaceholder')}
             placeholderTextColor="#8f8f8f"
             value={email}
             onChangeText={(text) => {
@@ -163,10 +156,11 @@ export default function LoginPopup({ visible, onClose }: Props) {
             autoCapitalize="none"
             style={styles.input}
           />
+
           {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
 
           <TextInput
-            placeholder="Пароль"
+            placeholder={t('auth.passwordPlaceholder')}
             placeholderTextColor="#8f8f8f"
             value={password}
             secureTextEntry
@@ -177,22 +171,23 @@ export default function LoginPopup({ visible, onClose }: Props) {
             style={styles.input}
           />
 
-          {mode === 'register' && password && <Text style={styles.hint}>Пароль должен быть не короче 6 символов и содержать цифры</Text>}
+          {mode === 'register' && password && <Text style={styles.hint}>{t('auth.passwordHint')}</Text>}
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
           <Pressable style={[styles.button, isSubmitDisabled && styles.buttonDisabled]} onPress={handleSubmit} disabled={isSubmitDisabled}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{mode === 'login' ? 'Войти' : 'Зарегистрироваться'}</Text>}
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{mode === 'login' ? t('auth.loginButton') : t('auth.registerButton')}</Text>}
           </Pressable>
+
           {mode === 'login' && (
             <Pressable onPress={openRegister} style={styles.registerBtn}>
-              <Text style={styles.registerText}>Создать аккаунт</Text>
+              <Text style={styles.registerText}>{t('auth.createAccount')}</Text>
             </Pressable>
           )}
 
           {mode === 'register' && (
             <Pressable onPress={() => setMode('login')} style={styles.registerBtn}>
-              <Text style={styles.registerText}>У меня уже есть аккаунт</Text>
+              <Text style={styles.registerText}>{t('auth.haveAccount')}</Text>
             </Pressable>
           )}
         </View>

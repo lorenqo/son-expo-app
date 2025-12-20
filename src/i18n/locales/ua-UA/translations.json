@@ -1,0 +1,47 @@
+{
+  "index": {
+    "tab_name": "Головна",
+    "title": "Головна",
+    "notLogined": "Ви не авторизовані",
+    "loginedUs": "Ви увійшли як"
+  },
+  "settings": {
+    "tab_name": "Налаштування",
+    "title": "Налаштування",
+    "inDevelopment": "У розробці"
+  },
+  "dreams": {
+    "tab_name": "Сни",
+    "title": "Сни",
+    "inDevelopment": "Розділ знаходиться у розробці"
+  },
+  "profile": {
+    "tab_name": "Профіль",
+    "notLoggedIn": "Ви не увійшли",
+    "balance": "Баланс",
+    "logout": "Вийти"
+  },
+
+  "auth": {
+    "loginTitle": "Вхід",
+    "registerTitle": "Реєстрація",
+
+    "namePlaceholder": "Імʼя",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Пароль",
+
+    "loginButton": "Увійти",
+    "registerButton": "Зареєструватися",
+
+    "createAccount": "Створити акаунт",
+    "haveAccount": "У мене вже є акаунт",
+
+    "errorEmptyFields": "Введіть email та пароль",
+    "errorServer": "Помилка зʼєднання з сервером",
+
+    "emailExists": "Акаунт з таким email вже існує",
+    "emailNotFound": "Акаунт з таким email не знайдено",
+
+    "passwordHint": "Пароль має містити щонайменше 6 символів, цифри та латинські літери"
+  }
+}
