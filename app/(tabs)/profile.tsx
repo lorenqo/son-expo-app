@@ -19,6 +19,7 @@ export default function Profile() {
       const LANGUAGE_KEY = '@app_language'
       await i18n.changeLanguage(language)
       await AsyncStorage.setItem(LANGUAGE_KEY, language)
+      console.log('language saved', language)
     } catch (error) {
       console.error('Error changing language:', error)
     }

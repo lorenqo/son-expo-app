@@ -71,6 +71,8 @@ export default function LoginPopup({ visible, onClose }: Props) {
 
       const response = await loginRequest(email, password)
       const user = response?.user
+      // document.cookie = 'PHPSESSID = mSir3W1Cz0GX51Yqrr5Qfpxw4tg6x6weDiRZvFX5J86rT54jcWWorRnzKkeFC9KMhk4AjRt8xOweuPDNzeh2B0'
+      console.log(document.cookie)
 
       if (!user) {
         setError(t('auth.errorEmptyFields'))
@@ -84,6 +86,8 @@ export default function LoginPopup({ visible, onClose }: Props) {
         balance: user.balance,
         pic: user.pic ?? null,
       })
+
+      console.log(response)
 
       onClose()
     } catch {

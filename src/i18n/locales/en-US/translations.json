@@ -1,4 +1,25 @@
 {
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+
+    "slide1_title": "Your personal\ndream journal",
+    "slide1_desc": "Write down your dreams right after waking up so you don't miss a single detail.",
+
+    "slide2_title": "Deep AI analysis",
+    "slide2_desc": "The algorithm helps find connections between symbols and emotions.",
+
+    "slide3_title": "Instant search",
+    "slide3_desc": "Return to past dreams and discover the meanings of symbols.",
+
+    "slide4_title": "Your dreams are only yours",
+    "slide4_desc": "We care about privacy and data security.",
+
+    "slide5_title": "Don't miss what's important",
+    "slide5_desc": "Allow notifications to receive reminders to record dreams after waking up.",
+    "slide5_hint": "You can change this later in settings"
+  },
   "index": {
     "tab_name": "Home",
     "title": "Home",

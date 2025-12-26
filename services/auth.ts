@@ -11,15 +11,12 @@ export async function loginRequest(email: string, password: string) {
   })
 
   const data = await response.json()
+  console.log(response.headers.getSetCookie())
   return data
 }
 
 export async function registerRequest(name: string, email: string, password: string) {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL
-
-  if (!apiUrl) {
-    throw new Error('API URL not defined')
-  }
 
   const formData = new FormData()
   formData.append('name', name)
