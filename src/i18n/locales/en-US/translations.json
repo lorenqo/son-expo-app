@@ -58,6 +58,7 @@
     "haveAccount": "I already have an account",
 
     "errorEmptyFields": "Please enter email and password",
+    "errorWrongLoginData": "Incorrect login or password. Please try again.",
     "errorServer": "Server connection error",
 
     "emailExists": "An account with this email already exists",

@@ -16,13 +16,14 @@ export default function Screen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: '#1C1022' },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
+    color: '#fff',
     fontSize: 22,
     fontWeight: '600',
     marginBottom: 8,

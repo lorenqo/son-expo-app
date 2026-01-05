@@ -5,13 +5,14 @@ export async function loginRequest(email: string, password: string) {
 
   const response = await fetch(loginUrl, {
     method: 'GET',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
     },
   })
 
   const data = await response.json()
-  console.log(response.headers.getSetCookie())
+  console.log(data)
   return data
 }
 
@@ -55,4 +56,26 @@ export async function checkEmail(email: string) {
 
   const data = await response.json()
   return Boolean(data)
+}
+
+export async function auth() {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL
+
+  const checkAuth = `${apiUrl}/rest/v1/auth?referrer=`
+
+  const response = await fetch(checkAuth, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Ошибка аутентификации')
+  }
+
+  const data = await response.json()
+  console.log(data)
+  return data
 }

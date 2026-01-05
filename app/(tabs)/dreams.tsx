@@ -18,6 +18,7 @@ export default function Dreams() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
+    backgroundColor: '#1C1022',
   },
   container: {
     flex: 1,
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    color: '#fff',
     fontSize: 22,
     fontWeight: '600',
     marginBottom: 8,

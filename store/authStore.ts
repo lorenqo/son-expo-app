@@ -1,13 +1,6 @@
+import type { User } from '@/models/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Store } from '@tanstack/store'
-
-export type User = {
-  id: number
-  email: string
-  name: string
-  balance: number
-  pic?: string | null
-}
 
 type AuthState = {
   user: User | null
@@ -52,4 +45,13 @@ export async function login(user: User) {
 export async function logout() {
   authStore.setState((s) => ({ ...s, user: null }))
   await AsyncStorage.removeItem(STORAGE_KEY)
+}
+
+export async function syncUser(user: User) {
+  authStore.setState({
+    user,
+    hydrated: true,
+  })
+
+  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(user))
 }

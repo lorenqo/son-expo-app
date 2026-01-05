@@ -1,3 +1,4 @@
+import { createUser } from '@/models/user'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
@@ -71,21 +72,13 @@ export default function LoginPopup({ visible, onClose }: Props) {
 
       const response = await loginRequest(email, password)
       const user = response?.user
-      // document.cookie = 'PHPSESSID = mSir3W1Cz0GX51Yqrr5Qfpxw4tg6x6weDiRZvFX5J86rT54jcWWorRnzKkeFC9KMhk4AjRt8xOweuPDNzeh2B0'
-      console.log(document.cookie)
 
       if (!user) {
-        setError(t('auth.errorEmptyFields'))
+        setError(t('auth.errorWrongLoginData'))
         return
       }
 
-      await login({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        balance: user.balance,
-        pic: user.pic ?? null,
-      })
+      await login(createUser(user))
 
       console.log(response)
 

@@ -8,8 +8,13 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        title: 'LiveExpert',
         headerShown: false,
-        tabBarActiveTintColor: '#2e7d32',
+        tabBarActiveTintColor: '#A60DF2',
+        tabBarStyle: {
+          backgroundColor: '#211428',
+          borderTopColor: 'transparent',
+        },
       }}>
       <Tabs.Screen
         name="index"

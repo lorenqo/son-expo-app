@@ -59,6 +59,7 @@
     "haveAccount": "У мене вже є акаунт",
 
     "errorEmptyFields": "Введіть email та пароль",
+    "errorWrongLoginData": "Неправильний логін або пароль. спробуйте ще раз.",
     "errorServer": "Помилка зʼєднання з сервером",
 
     "emailExists": "Акаунт з таким email вже існує",

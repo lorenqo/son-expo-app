@@ -43,10 +43,18 @@ export default function Profile() {
     )
   }
 
+  let imageUrl
+
+  if (!user.pic) {
+    imageUrl = `${apiUrl}/public/images/photo_no_160x200.gif`
+  } else {
+    imageUrl = `${apiUrl}/public/images/photo/${user.id}-mini?nocache=${user.pic}`
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.center}>
-        <Image source={{ uri: `${apiUrl}/public/images/photo/${user.id}-mini?nocache=${user.pic}` }} style={styles.avatar} />
+        <Image source={{ uri: imageUrl }} style={styles.avatar} />
 
         <Text style={styles.name}>{user.name}</Text>
 
@@ -75,7 +83,7 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: '#1C1022' },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -83,6 +91,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    color: '#fff',
     fontSize: 22,
     marginBottom: 20,
   },
@@ -93,16 +102,18 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   name: {
+    color: '#fff',
     fontSize: 20,
     fontWeight: '600',
   },
   balance: {
+    color: '#fff',
     fontSize: 16,
     marginTop: 4,
     marginBottom: 24,
   },
   button: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#A60DF2',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
@@ -119,7 +130,7 @@ const styles = StyleSheet.create({
   flagButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: '#e0e0e0ff',
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 80,

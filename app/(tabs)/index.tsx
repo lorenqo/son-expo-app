@@ -35,7 +35,7 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, backgroundColor: '#1C1022' },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -46,9 +46,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 8,
+    color: '#FFFFFF',
   },
   text: {
     fontSize: 16,
-    color: '#444',
+    color: '#FFFFFF',
   },
 })
