@@ -12,7 +12,7 @@ export default function Profile() {
   const { user, hydrated } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
   const { t, i18n } = useTranslation()
-  const apiUrl = process.env.EXPO_PUBLIC_API_URL
+  const apiUrl = process.env.EXPO_PUBLIC_WEB_API_URL
 
   const handleLanguageChange = async (language: string) => {
     try {
@@ -20,6 +20,7 @@ export default function Profile() {
       await i18n.changeLanguage(language)
       await AsyncStorage.setItem(LANGUAGE_KEY, language)
       console.log('language saved', language)
+
     } catch (error) {
       console.error('Error changing language:', error)
     }
