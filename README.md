@@ -10,5 +10,7 @@ adb reverse tcp:7777 tcp:443
 после шаги выше
 
 docker start: 
-cd /home/fulzeero/Документы/site/home/xander/sites/liveexpert
 docker compose up -d
+
+app build:
+npx expo run:android
