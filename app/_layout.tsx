@@ -1,32 +1,36 @@
-import { auth } from '@/services/auth'
+import { requests } from '@/services/requests'
 import '@/src/i18n'
 import { Stack } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { hydrateAuth, logout, syncUser } from '../store/authStore'
+import { initCookies } from '@/services/cookies';
 
 export default function RootLayout() {
   const [ready, setReady] = useState(false)
+
   async function checkAuth() {
-    const res = await auth()
+    const res = await requests()
     console.log(res.user.isGuest)
+
     if (res.user.isGuest) {
       await logout()
-      return
     } else {
       await syncUser(res.user)
     }
   }
+
   useEffect(() => {
     const run = async () => {
+      await initCookies()
       await hydrateAuth()
       await checkAuth()
       setReady(true)
     }
-
     run()
+    return () => {
+    }
   }, [])
-
   if (!ready) return null
 
   return (

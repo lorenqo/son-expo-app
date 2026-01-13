@@ -2,17 +2,21 @@ import '@/src/i18n'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import {Image, Platform, Pressable, StyleSheet, Text, View} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import LoginPopup from '../../components/LoginPopup'
-import { logout } from '../../store/authStore'
-import { useAuth } from '../../store/useAuth'
+import { logout } from '@/store/authStore'
+import { useAuth } from '@/store/useAuth'
 
 export default function Profile() {
   const { user, hydrated } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
   const { t, i18n } = useTranslation()
-  const apiUrl = process.env.EXPO_PUBLIC_WEB_API_URL
+  const apiUrl =
+      Platform.OS === "web"
+          ? process.env.EXPO_PUBLIC_WEB_API_URL
+          : process.env.EXPO_PUBLIC_MOBILE_API_URL;
+
 
   const handleLanguageChange = async (language: string) => {
     try {

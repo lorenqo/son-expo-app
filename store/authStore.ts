@@ -1,15 +1,9 @@
 import type { User } from '@/models/user'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Store } from '@tanstack/store'
-import type {CookieManagerStatic} from "@react-native-cookies/cookies";
 import {Platform} from "react-native";
-import {logoutRequest} from "@/services/auth";
-let CookieManager: CookieManagerStatic | null = null;
-
-if (Platform.OS !== "web") {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  CookieManager = require("@react-native-cookies/cookies");
-}
+import {logoutRequest} from "@/services/requests";
+import {removeCookies} from "@/services/cookies";
 
 type AuthState = {
   user: User | null
@@ -54,10 +48,10 @@ export async function login(user: User) {
 export async function logout() {
   authStore.setState((s) => ({ ...s, user: null }))
   await AsyncStorage.removeItem(STORAGE_KEY)
-  await logoutRequest()
-  if (Platform.OS !== "web" && CookieManager) {
-    await CookieManager.clearAll(true)
-  }
+  if (Platform.OS !== "web") {
+    await removeCookies()
+  } else
+    await logoutRequest()
 
 }
 

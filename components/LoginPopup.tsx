@@ -2,7 +2,7 @@ import { createUser } from '@/models/user'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { checkEmail, loginRequest, registerRequest } from '../services/auth'
+import { checkEmail, loginRequest, registerRequest } from '../services/requests'
 import { login } from '../store/authStore'
 
 type Props = {
