@@ -8,7 +8,7 @@ const apiUrl =
         : process.env.EXPO_PUBLIC_MOBILE_API_URL;
 
 // requests
-export async function requests() {
+export async function auth() {
     try {
         const response = await api.get('/rest/v1/auth', {
             params: { referrer: api.defaults.baseURL + '/' },

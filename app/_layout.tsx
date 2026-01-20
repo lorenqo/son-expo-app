@@ -1,16 +1,17 @@
-import { requests } from '@/services/requests'
-import '@/src/i18n'
 import { Stack } from 'expo-router'
+import {auth} from '@/services/requests'
+import '@/src/i18n'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { hydrateAuth, logout, syncUser } from '../store/authStore'
 import { initCookies } from '@/services/cookies';
 
+
 export default function RootLayout() {
   const [ready, setReady] = useState(false)
 
   async function checkAuth() {
-    const res = await requests()
+    const res = await auth()
     console.log(res.user.isGuest)
 
     if (res.user.isGuest) {

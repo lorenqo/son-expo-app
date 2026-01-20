@@ -6,12 +6,12 @@ export default function Dreams() {
   const { t } = useTranslation()
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
-        <Text style={styles.title}>{t('dreams.title')}</Text>
-        <Text style={styles.subtitle}>{t('dreams.inDevelopment')}</Text>
-      </View>
-    </SafeAreaView>
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.container}>
+          <Text style={styles.title}>{t('dreams.title')}</Text>
+          <Text style={styles.subtitle}>{t('dreams.inDevelopment')}</Text>
+        </View>
+      </SafeAreaView>
   )
 }
 

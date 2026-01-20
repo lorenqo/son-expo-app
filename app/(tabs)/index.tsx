@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../../store/useAuth'
+import { useAuth } from '@/store/useAuth'
 
 export default function Index() {
   const { user } = useAuth()
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 8,
-    color: '#FFFFFF',
+    color: 'white',
   },
   text: {
     fontSize: 16,

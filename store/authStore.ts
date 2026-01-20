@@ -51,7 +51,13 @@ export async function logout() {
   if (Platform.OS !== "web") {
     await removeCookies()
   } else
-    await logoutRequest()
+    document.cookie.split(";").forEach(c => {
+      const name = c.split("=")[0].trim();
+      document.cookie = `${name}=; Max-Age=0; path=/; domain=.xander-le.work;`;
+    });
+
+  console.log('cookies deleted')
+
 
 }
 
