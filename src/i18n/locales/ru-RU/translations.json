@@ -41,30 +41,55 @@
     "tab_name": "Профиль",
     "notLoggedIn": "Вы не вошли",
     "balance": "Баланс",
+    "login": "Войти",
     "logout": "Выйти"
   },
 
-  "auth": {
-    "loginTitle": "Вход",
-    "registerTitle": "Регистрация",
+  "authLogin": {
+    "title": "Войти в Сонник AI",
+    "subtitle": "Разгадайте тайны своих сновидений с помощью искусственного интеллекта",
 
-    "namePlaceholder": "Имя",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Пароль",
 
-    "loginButton": "Войти",
-    "registerButton": "Зарегистрироваться",
+    "login": "Войти",
+    "register": "Регистрация",
+    "continueAsGuest": "Продолжить как гость",
+    "forgotPassword": "Забыли пароль?",
+
+    "divider": "Или войдите через",
+
+    "errorEmptyFields": "Пожалуйста, заполните все поля",
+    "errorWrongLoginData": "Неверный email или пароль",
+    "errorServer": "Ошибка сервера. Попробуйте позже",
+    "emailNotFound": "Email не найден",
+    "termsText": "Входя, вы соглашаетесь с нашими",
+    "terms": "Условиями использования",
+    "and": "и",
+    "privacy": "Политикой конфиденциальности"
+  },
+
+  "authRegister": {
+    "title": "Регистрация",
+    "subtitle": "Начните путешествие в мир осознанных сновидений",
+
+    "namePlaceholder": "Ваше имя",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Придумайте пароль",
 
     "createAccount": "Создать аккаунт",
-    "haveAccount": "У меня уже есть аккаунт",
 
-    "errorEmptyFields": "Введите email и пароль",
-    "errorWrongLoginData": "Неправильный логин или пароль. Попробуйте еще раз.",
-    "errorServer": "Ошибка соединения с сервером",
+    "divider": "Или войдите через",
 
-    "emailExists": "Аккаунт с таким email уже существует",
-    "emailNotFound": "Аккаунт с таким email не найден",
+    "passwordHint": "Минимум 6 символов, одна буква и одна цифра",
 
-    "passwordHint": "Пароль должен быть не менее 6 символов, содержать цифры и латинские буквы"
+    "errorEmptyFields": "Пожалуйста, заполните все поля",
+    "errorWrongLoginData": "Неверный email или пароль",
+    "errorServer": "Ошибка сервера. Попробуйте позже",
+    "emailExists": "Этот email уже зарегистрирован",
+    "termsText": "Регистрируясь, вы соглашаетесь с нашими",
+    "terms": "Условиями использования",
+    "and": "и",
+    "privacy": "Политикой конфиденциальности"
   }
 }

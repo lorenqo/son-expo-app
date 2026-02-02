@@ -1,133 +1,150 @@
-import { createUser } from '@/models/user'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { checkEmail, loginRequest, registerRequest } from '../services/requests'
-import { login } from '../store/authStore'
+import { createUser } from "@/models/user";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import {
+  checkEmail,
+  loginRequest,
+  registerRequest,
+} from "../services/requests";
+import { login } from "../store/authStore";
 
 type Props = {
-  visible: boolean
-  onClose: () => void
-  autoLogin?: boolean
-}
+  visible: boolean;
+  onClose: () => void;
+  autoLogin?: boolean;
+};
 
 export default function LoginPopup({ visible, onClose }: Props) {
-  type Mode = 'login' | 'register'
-  const { t } = useTranslation()
+  type Mode = "login" | "register";
+  const { t } = useTranslation();
 
-  const [emailError, setEmailError] = useState('')
-  const [checkingEmail, setCheckingEmail] = useState(false)
-  const [mode, setMode] = useState<Mode>('login')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const passwordError = mode === 'register' ? validatePassword(password) : null
-  const isSubmitDisabled = loading || checkingEmail || Boolean(emailError) || Boolean(passwordError)
+  const [emailError, setEmailError] = useState("");
+  const [checkingEmail, setCheckingEmail] = useState(false);
+  const [mode, setMode] = useState<Mode>("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const passwordError = mode === "register" ? validatePassword(password) : null;
+  const isSubmitDisabled =
+    loading || checkingEmail || Boolean(emailError) || Boolean(passwordError);
 
   function validatePassword(password: string): string | null {
     if (!password) {
-      return t('auth.errorEmptyFields')
+      return t("auth.errorEmptyFields");
     }
 
-    if (password.length < 6 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
-      return t('auth.passwordHint')
+    if (
+      password.length < 6 ||
+      !/[A-Za-z]/.test(password) ||
+      !/\d/.test(password)
+    ) {
+      return t("auth.passwordHint");
     }
 
-    return null
+    return null;
   }
 
   const handleEmailBlur = async () => {
-    if (!email || !email.includes('@')) return
+    if (!email || !email.includes("@")) return;
 
     try {
-      setCheckingEmail(true)
-      setEmailError('')
+      setCheckingEmail(true);
+      setEmailError("");
 
-      const permission = await checkEmail(email)
+      const permission = await checkEmail(email);
 
-      if (mode === 'register' && !permission) {
-        setEmailError(t('auth.emailExists'))
+      if (mode === "register" && !permission) {
+        setEmailError(t("auth.emailExists"));
       }
 
-      if (mode === 'login' && permission) {
-        setEmailError(t('auth.emailNotFound'))
+      if (mode === "login" && permission) {
+        setEmailError(t("auth.emailNotFound"));
       }
     } catch {
     } finally {
-      setCheckingEmail(false)
+      setCheckingEmail(false);
     }
-  }
+  };
 
   const loginUser = async () => {
     if (!email || !password) {
-      setError(t('auth.errorEmptyFields'))
-      return
+      setError(t("auth.errorEmptyFields"));
+      return;
     }
 
     try {
-      setLoading(true)
-      setError('')
+      setLoading(true);
+      setError("");
 
-      const response = await loginRequest(email, password)
-      const user = response?.user
+      const response = await loginRequest(email, password);
+      const user = response?.user;
 
       if (!user) {
-        setError(t('auth.errorWrongLoginData'))
-        return
+        setError(t("auth.errorWrongLoginData"));
+        return;
       }
 
-      await login(createUser(user))
+      await login(createUser(user));
 
-      console.log(response)
+      console.log(response);
 
-      onClose()
+      onClose();
     } catch {
-      setError(t('auth.errorServer'))
+      setError(t("auth.errorServer"));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const registerUser = async () => {
     if (!name || !email || !password) {
-      setError(t('auth.errorEmptyFields'))
-      return
+      setError(t("auth.errorEmptyFields"));
+      return;
     }
 
-    const passwordError = validatePassword(password)
+    const passwordError = validatePassword(password);
     if (passwordError) {
-      setError(passwordError)
-      return
+      setError(passwordError);
+      return;
     }
 
     try {
-      setLoading(true)
-      setError('')
+      setLoading(true);
+      setError("");
 
-      await registerRequest(name, email, password)
-      loginUser()
-      onClose()
+      await registerRequest(name, email, password);
+      loginUser();
+      onClose();
     } catch {
-      setError(t('auth.errorServer'))
+      setError(t("auth.errorServer"));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSubmit = async () => {
-    if (mode === 'login') {
-      await loginUser()
+    if (mode === "login") {
+      await loginUser();
     } else {
-      await registerUser()
+      await registerUser();
     }
-  }
+  };
 
   const openRegister = () => {
-    setError('')
-    setMode('register')
-  }
+    setError("");
+    setMode("register");
+  };
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -137,17 +154,27 @@ export default function LoginPopup({ visible, onClose }: Props) {
             <Text style={styles.closeText}>✕</Text>
           </Pressable>
 
-          <Text style={styles.title}>{mode === 'login' ? t('auth.loginTitle') : t('auth.registerTitle')}</Text>
+          <Text style={styles.title}>
+            {mode === "login" ? t("auth.loginTitle") : t("auth.registerTitle")}
+          </Text>
 
-          {mode === 'register' && <TextInput placeholder={t('auth.namePlaceholder')} placeholderTextColor="#8f8f8f" value={name} onChangeText={setName} style={styles.input} />}
+          {mode === "register" && (
+            <TextInput
+              placeholder={t("auth.namePlaceholder")}
+              placeholderTextColor="#8f8f8f"
+              value={name}
+              onChangeText={setName}
+              style={styles.input}
+            />
+          )}
 
           <TextInput
-            placeholder={t('auth.emailPlaceholder')}
+            placeholder={t("auth.emailPlaceholder")}
             placeholderTextColor="#8f8f8f"
             value={email}
             onChangeText={(text) => {
-              setEmail(text)
-              setEmailError('')
+              setEmail(text);
+              setEmailError("");
             }}
             onBlur={handleEmailBlur}
             autoCapitalize="none"
@@ -157,104 +184,121 @@ export default function LoginPopup({ visible, onClose }: Props) {
           {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
 
           <TextInput
-            placeholder={t('auth.passwordPlaceholder')}
+            placeholder={t("auth.passwordPlaceholder")}
             placeholderTextColor="#8f8f8f"
             value={password}
             secureTextEntry
             onChangeText={(text) => {
-              setPassword(text)
-              setError('')
+              setPassword(text);
+              setError("");
             }}
             style={styles.input}
           />
 
-          {mode === 'register' && password && <Text style={styles.hint}>{t('auth.passwordHint')}</Text>}
+          {mode === "register" && password && (
+            <Text style={styles.hint}>{t("auth.passwordHint")}</Text>
+          )}
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          <Pressable style={[styles.button, isSubmitDisabled && styles.buttonDisabled]} onPress={handleSubmit} disabled={isSubmitDisabled}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{mode === 'login' ? t('auth.loginButton') : t('auth.registerButton')}</Text>}
+          <Pressable
+            style={[styles.button, isSubmitDisabled && styles.buttonDisabled]}
+            onPress={handleSubmit}
+            disabled={isSubmitDisabled}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>
+                {mode === "login"
+                  ? t("auth.loginButton")
+                  : t("auth.registerButton")}
+              </Text>
+            )}
           </Pressable>
 
-          {mode === 'login' && (
+          {mode === "login" && (
             <Pressable onPress={openRegister} style={styles.registerBtn}>
-              <Text style={styles.registerText}>{t('auth.createAccount')}</Text>
+              <Text style={styles.registerText}>{t("auth.createAccount")}</Text>
             </Pressable>
           )}
 
-          {mode === 'register' && (
-            <Pressable onPress={() => setMode('login')} style={styles.registerBtn}>
-              <Text style={styles.registerText}>{t('auth.haveAccount')}</Text>
+          {mode === "register" && (
+            <Pressable
+              onPress={() => setMode("login")}
+              style={styles.registerBtn}
+            >
+              <Text style={styles.registerText}>{t("auth.haveAccount")}</Text>
             </Pressable>
           )}
         </View>
       </View>
     </Modal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
     padding: 20,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 20,
   },
   close: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   closeText: {
     fontSize: 18,
   },
   title: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     marginBottom: 10,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: "#2e7d32",
     padding: 14,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 6,
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
   },
   buttonDisabled: {
-    backgroundColor: '#c8e6c9',
+    backgroundColor: "#c8e6c9",
   },
   registerBtn: {
     marginTop: 16,
   },
   registerText: {
-    textAlign: 'center',
-    color: '#2e7d32',
-    fontWeight: '600',
+    textAlign: "center",
+    color: "#2e7d32",
+    fontWeight: "600",
   },
   hint: {
     marginTop: 6,
     fontSize: 12,
-    textAlign: 'center',
-    color: '#777',
+    textAlign: "center",
+    color: "#777",
   },
-})
+});

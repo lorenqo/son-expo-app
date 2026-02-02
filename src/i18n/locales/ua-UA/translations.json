@@ -41,30 +41,55 @@
     "tab_name": "Профіль",
     "notLoggedIn": "Ви не увійшли",
     "balance": "Баланс",
+    "login": "Увійти",
     "logout": "Вийти"
   },
 
-  "auth": {
-    "loginTitle": "Вхід",
-    "registerTitle": "Реєстрація",
+  "authLogin": {
+    "title": "Увійти в Сонник AI",
+    "subtitle": "Розкрийте таємниці своїх снів за допомогою штучного інтелекту",
 
-    "namePlaceholder": "Імʼя",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Пароль",
 
-    "loginButton": "Увійти",
-    "registerButton": "Зареєструватися",
+    "login": "Увійти",
+    "register": "Реєстрація",
+    "continueAsGuest": "Продовжити як гість",
+    "forgotPassword": "Забули пароль?",
+
+    "divider": "Або увійдіть через",
+
+    "errorEmptyFields": "Будь ласка, заповніть усі поля",
+    "errorWrongLoginData": "Невірний email або пароль",
+    "errorServer": "Помилка сервера. Спробуйте пізніше",
+    "emailNotFound": "Email не знайдено",
+    "termsText": "Входячи, ви погоджуєтесь з нашими",
+    "terms": "Умовами користування",
+    "and": "і",
+    "privacy": "Політикою конфіденційності"
+  },
+
+  "authRegister": {
+    "title": "Реєстрація",
+    "subtitle": "Почніть подорож у світ усвідомлених сновидінь",
+
+    "namePlaceholder": "Ваше імʼя",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Придумайте пароль",
 
     "createAccount": "Створити акаунт",
-    "haveAccount": "У мене вже є акаунт",
 
-    "errorEmptyFields": "Введіть email та пароль",
-    "errorWrongLoginData": "Неправильний логін або пароль. спробуйте ще раз.",
-    "errorServer": "Помилка зʼєднання з сервером",
+    "divider": "Або увійдіть через",
 
-    "emailExists": "Акаунт з таким email вже існує",
-    "emailNotFound": "Акаунт з таким email не знайдено",
+    "passwordHint": "Мінімум 6 символів, одна літера та одна цифра",
 
-    "passwordHint": "Пароль має містити щонайменше 6 символів, цифри та латинські літери"
+    "errorEmptyFields": "Будь ласка, заповніть усі поля",
+    "errorWrongLoginData": "Невірний email або пароль",
+    "errorServer": "Помилка сервера. Спробуйте пізніше",
+    "emailExists": "Цей email вже зареєстрований",
+    "termsText": "Реєструючись, ви погоджуєтесь з нашими",
+    "terms": "Умовами користування",
+    "and": "і",
+    "privacy": "Політикою конфіденційності"
   }
 }

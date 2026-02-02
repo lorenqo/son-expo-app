@@ -1,162 +1,175 @@
-import '@/src/i18n'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import {Image, Platform, Pressable, StyleSheet, Text, View} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import LoginPopup from '../../components/LoginPopup'
-import { logout } from '@/store/authStore'
-import { useAuth } from '@/store/useAuth'
+import "@/src/i18n";
+import { logout } from "@/store/authStore";
+import { useAuth } from "@/store/useAuth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Image, Platform, Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native-unistyles";
 
 export default function Profile() {
-  const { user, hydrated } = useAuth()
-  const [loginOpen, setLoginOpen] = useState(false)
-  const { t, i18n } = useTranslation()
-  const apiUrl =
-      Platform.OS === "web"
-          ? process.env.EXPO_PUBLIC_WEB_API_URL
-          : process.env.EXPO_PUBLIC_MOBILE_API_URL;
+  const { user, hydrated } = useAuth();
+  const [loginOpen, setLoginOpen] = useState(false);
+  const { t, i18n } = useTranslation();
 
+  const apiUrl =
+    Platform.OS === "web"
+      ? process.env.EXPO_PUBLIC_WEB_API_URL
+      : process.env.EXPO_PUBLIC_MOBILE_API_URL;
 
   const handleLanguageChange = async (language: string) => {
     try {
-      const LANGUAGE_KEY = '@app_language'
-      await i18n.changeLanguage(language)
-      await AsyncStorage.setItem(LANGUAGE_KEY, language)
-      console.log('language saved', language)
-
+      const LANGUAGE_KEY = "@app_language";
+      await i18n.changeLanguage(language);
+      await AsyncStorage.setItem(LANGUAGE_KEY, language);
     } catch (error) {
-      console.error('Error changing language:', error)
+      console.error("Error changing language:", error);
     }
-  }
+  };
 
-  if (!hydrated) return null
+  if (!hydrated) return null;
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.center}>
-          <Text style={styles.title}>{t('profile.notLoggedIn')}</Text>
+      <View style={styles.root}>
+        <SafeAreaView style={styles.safe}>
+          <View style={styles.container}>
+            <Text style={styles.title}>{t("profile.notLoggedIn")}</Text>
 
-          <Pressable style={styles.button} onPress={() => setLoginOpen(true)}>
-            <Text style={styles.buttonText}>{t('auth.loginButton')}</Text>
-          </Pressable>
+            <Pressable
+              style={styles.primaryButton}
+              onPress={() => router.push("../login")}
+              // onPress={() => setLoginOpen(true)}
+            >
+              <Text style={styles.primaryButtonText}>{t("profile.login")}</Text>
+            </Pressable>
 
-          <LoginPopup visible={loginOpen} onClose={() => setLoginOpen(false)} />
-        </View>
-      </SafeAreaView>
-    )
+            {/* <Login visible={loginOpen} onClose={() => setLoginOpen(false)} /> */}
+          </View>
+        </SafeAreaView>
+      </View>
+    );
   }
 
-  let imageUrl
-
-  if (!user.pic) {
-    imageUrl = `${apiUrl}/public/images/photo_no_160x200.gif`
-  } else {
-    imageUrl = `${apiUrl}/public/images/photo/${user.id}-mini?nocache=${user.pic}`
-  }
+  const imageUrl = user.pic
+    ? `${apiUrl}/public/images/photo/${user.id}-mini?nocache=${user.pic}`
+    : `${apiUrl}/public/images/photo_no_160x200.gif`;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.center}>
-        <Image source={{ uri: imageUrl }} style={styles.avatar} />
+    <View style={styles.root}>
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.container}>
+          <Image source={{ uri: imageUrl }} style={styles.avatar} />
 
-        <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{user.name}</Text>
 
-        <Text style={styles.balance}>
-          {t('profile.balance')}: {user.balance} ₽
-        </Text>
-        <View style={styles.language}>
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('en-US')}>
-            <Text style={styles.flagText}>🇺🇸</Text>
-          </Pressable>
+          <Text style={styles.balance}>
+            {t("profile.balance")}: {user.balance} ₽
+          </Text>
 
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ru-RU')}>
-            <Text style={styles.flagText}>🇷🇺</Text>
-          </Pressable>
+          <View style={styles.languageRow}>
+            <Pressable onPress={() => handleLanguageChange("en-US")}>
+              <Text style={styles.flag}>🇺🇸</Text>
+            </Pressable>
+            <Pressable onPress={() => handleLanguageChange("ru-RU")}>
+              <Text style={styles.flag}>🇷🇺</Text>
+            </Pressable>
+            <Pressable onPress={() => handleLanguageChange("ua-UA")}>
+              <Text style={styles.flag}>🇺🇦</Text>
+            </Pressable>
+          </View>
 
-          <Pressable style={({ pressed }) => [styles.flagButton, pressed && styles.buttonPressed]} onPress={() => handleLanguageChange('ua-UA')}>
-            <Text style={styles.flagText}>🇺🇦</Text>
+          <Pressable onPress={logout}>
+            <Text style={styles.logoutText}>{t("profile.logout")}</Text>
           </Pressable>
         </View>
-        <Pressable style={styles.logout} onPress={logout}>
-          <Text style={styles.logoutText}>{t('profile.logout')}</Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
-  )
+      </SafeAreaView>
+    </View>
+  );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#1C1022' },
-  center: {
+const styles = StyleSheet.create((theme) => ({
+  /** layout - 1:1 как в Dreams */
+  root: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    minHeight: "100vh" as any,
+    backgroundColor: theme.colors.background,
+    alignItems: "center",
+    justifyContent: "center",
   },
+
+  /** layout - 1:1 как в Dreams */
+  safe: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
+
+  /** layout - 1:1 как в Dreams */
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+
+    paddingHorizontal: theme.gap(3),
+    paddingVertical: theme.gap(4),
+  },
+
+  /** дальше уже визуальные стили */
   title: {
-    color: '#fff',
+    color: theme.colors.typography,
     fontSize: 22,
-    marginBottom: 20,
+    fontWeight: "600",
+    marginBottom: theme.gap(3),
+    textAlign: "center",
   },
+
   avatar: {
     width: 96,
     height: 96,
     borderRadius: 48,
-    marginBottom: 12,
+    marginBottom: theme.gap(1.5),
   },
+
   name: {
-    color: '#fff',
+    color: theme.colors.typography,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
+    marginBottom: theme.gap(0.5),
   },
+
   balance: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 4,
-    marginBottom: 24,
+    color: theme.colors.dimmed,
+    fontSize: 15,
+    marginBottom: theme.gap(3),
   },
-  button: {
-    backgroundColor: '#A60DF2',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
+
+  languageRow: {
+    flexDirection: "row",
+    marginBottom: theme.gap(2),
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  language: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flagButton: {
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#e0e0e0ff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 80,
-    margin: 10,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-    transform: [{ scale: 0.98 }],
-  },
-  flagText: {
+
+  flag: {
     fontSize: 24,
+    marginHorizontal: theme.gap(1),
   },
-  logout: {
-    marginTop: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: '#e53935',
+
+  primaryButton: {
+    paddingHorizontal: theme.gap(3),
+    paddingVertical: theme.gap(1.5),
   },
-  logoutText: {
-    color: '#fff',
+
+  primaryButtonText: {
+    color: theme.colors.tint,
     fontSize: 16,
+    fontWeight: "600",
   },
-})
+
+  logoutText: {
+    color: theme.colors.danger,
+    fontSize: 15,
+    fontWeight: "600",
+    marginTop: theme.gap(2),
+  },
+}));

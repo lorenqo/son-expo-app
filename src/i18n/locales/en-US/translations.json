@@ -40,30 +40,55 @@
     "tab_name": "Profile",
     "notLoggedIn": "You are not logged in",
     "balance": "Balance",
+    "login": "Log in",
     "logout": "Log out"
   },
 
-  "auth": {
-    "loginTitle": "Login",
-    "registerTitle": "Registration",
+  "authLogin": {
+    "title": "Sign in to Dreambook AI",
+    "subtitle": "Unlock the secrets of your dreams with artificial intelligence",
 
-    "namePlaceholder": "Name",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
 
-    "loginButton": "Log in",
-    "registerButton": "Sign up",
+    "login": "Sign in",
+    "register": "Sign up",
+    "continueAsGuest": "Continue as guest",
+    "forgotPassword": "Forgot password?",
 
-    "createAccount": "Create an account",
-    "haveAccount": "I already have an account",
+    "divider": "Or sign in with",
 
-    "errorEmptyFields": "Please enter email and password",
-    "errorWrongLoginData": "Incorrect login or password. Please try again.",
-    "errorServer": "Server connection error",
+    "errorEmptyFields": "Please fill in all fields",
+    "errorWrongLoginData": "Incorrect email or password",
+    "errorServer": "Server error. Please try again later",
+    "emailNotFound": "Email not found",
+    "termsText": "By logining, you agree to our",
+    "terms": "Terms of Use",
+    "and": "and",
+    "privacy": "Privacy Policy"
+  },
 
-    "emailExists": "An account with this email already exists",
-    "emailNotFound": "Account with this email was not found",
+  "authRegister": {
+    "title": "Sign up",
+    "subtitle": "Start your journey into conscious dreaming",
 
-    "passwordHint": "Password must be at least 6 characters long and contain numbers and Latin letters"
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Create a password",
+
+    "createAccount": "Create account",
+
+    "divider": "Or sign in with",
+
+    "passwordHint": "At least 6 characters, one letter and one number",
+
+    "errorEmptyFields": "Please fill in all fields",
+    "errorWrongLoginData": "Incorrect email or password",
+    "errorServer": "Server error. Please try again later",
+    "emailExists": "This email is already registered",
+    "termsText": "By registering, you agree to our",
+    "terms": "Terms of Use",
+    "and": "and",
+    "privacy": "Privacy Policy"
   }
 }
