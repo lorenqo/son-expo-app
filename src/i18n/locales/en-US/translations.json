@@ -80,7 +80,7 @@
 
     "divider": "Or sign in with",
 
-    "passwordHint": "At least 6 characters, one letter and one number",
+    "passwordHint": "The password must be at least 6 characters long and contain numbers and Latin letters.",
 
     "errorEmptyFields": "Please fill in all fields",
     "errorWrongLoginData": "Incorrect email or password",

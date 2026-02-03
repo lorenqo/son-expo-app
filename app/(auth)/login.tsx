@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import {
   Animated,
   Easing,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -19,13 +18,17 @@ import { StyleSheet } from "react-native-unistyles";
 import { checkEmail, loginRequest } from "../../services/requests";
 import { login } from "../../store/authStore";
 
-type Props = {
-  visible: boolean;
-  onClose: () => void;
-};
-
-export default function Login({ visible, onClose }: Props) {
+export default function Login() {
   const { t } = useTranslation();
+
+  const closeModal = () => {
+    if (!router.canGoBack()) {
+      router.replace("/");
+      return;
+    }
+
+    router.back();
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -141,7 +144,7 @@ export default function Login({ visible, onClose }: Props) {
       }
 
       await login(createUser(user));
-      router.back();
+      closeModal();
     } catch {
       setError(t("authLogin.errorServer"));
     } finally {
@@ -152,190 +155,188 @@ export default function Login({ visible, onClose }: Props) {
   /* ================= render ================= */
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.root}>
-        <Animated.View
-          style={{
-            flex: 1,
-            opacity: screenOpacity,
-            transform: [{ translateY: screenTranslate }],
-          }}
+    <View style={styles.root}>
+      <Animated.View
+        style={{
+          flex: 1,
+          opacity: screenOpacity,
+          transform: [{ translateY: screenTranslate }],
+        }}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
         >
-          <ScrollView
-            contentContainerStyle={styles.scroll}
-            keyboardShouldPersistTaps="handled"
-          >
-            {/* top action */}
-            <View style={styles.topBar}>
-              <Pressable style={styles.topButton} onPress={() => router.back()}>
-                <Text style={styles.closeText}>✕</Text>
-              </Pressable>
+          {/* top action */}
+          <View style={styles.topBar}>
+            <Pressable style={styles.topButton} onPress={closeModal}>
+              <Text style={styles.closeText}>✕</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.topButton}
+              onPress={() => router.replace("../register")}
+            >
+              <Text style={styles.secondaryButtonText}>
+                {t("authLogin.register")}
+              </Text>
+            </Pressable>
+          </View>
+
+          {/* header */}
+          <View style={styles.header}>
+            <View style={styles.avatarWrapper}>
+              <Image
+                source={require("../../assets/images/login_avatar.png")}
+                style={{ width: 84, height: 84, borderRadius: 42 }}
+                contentFit="cover"
+              />
+            </View>
+
+            <Text style={styles.title}>{t("authLogin.title")}</Text>
+            <Text style={styles.subtitle}>{t("authLogin.subtitle")}</Text>
+          </View>
+
+          {/* form */}
+          <View style={styles.form}>
+            <View style={styles.inputWrapper}>
+              <View style={styles.inputIcon}>
+                <Ionicons name="mail-outline" size={20} color="#B790CB" />
+              </View>
+
+              <TextInput
+                placeholderTextColor="#9ca3af"
+                placeholder={t("authLogin.emailPlaceholder")}
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError("");
+                }}
+                onBlur={handleEmailBlur}
+                autoCapitalize="none"
+                style={styles.input}
+              />
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <View style={styles.inputIcon}>
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color="#B790CB"
+                />
+              </View>
+
+              <TextInput
+                placeholderTextColor="#9ca3af"
+                secureTextEntry={!showPassword}
+                style={styles.input}
+                placeholder={t("authLogin.passwordPlaceholder")}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setError("");
+                }}
+              />
 
               <Pressable
-                style={styles.topButton}
-                onPress={() => router.replace("../register")}
+                style={styles.eyeButton}
+                onPress={() => setShowPassword((v) => !v)}
               >
-                <Text style={styles.secondaryButtonText}>
-                  {t("authLogin.register")}
-                </Text>
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#9ca3af"
+                />
               </Pressable>
             </View>
 
-            {/* header */}
-            <View style={styles.header}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={require("../../assets/images/login_avatar.png")}
-                  style={{ width: 84, height: 84, borderRadius: 42 }}
-                  contentFit="cover"
-                />
-              </View>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-              <Text style={styles.title}>{t("authLogin.title")}</Text>
-              <Text style={styles.subtitle}>{t("authLogin.subtitle")}</Text>
-            </View>
+            <Pressable style={styles.forgot}>
+              <Text style={styles.forgotText}>
+                {t("authLogin.forgotPassword")}
+              </Text>
+            </Pressable>
 
-            {/* form */}
-            <View style={styles.form}>
-              <View style={styles.inputWrapper}>
-                <View style={styles.inputIcon}>
-                  <Ionicons name="mail-outline" size={20} color="#B790CB" />
-                </View>
-
-                <TextInput
-                  placeholderTextColor="#9ca3af"
-                  placeholder={t("authLogin.emailPlaceholder")}
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setEmailError("");
-                  }}
-                  onBlur={handleEmailBlur}
-                  autoCapitalize="none"
-                  style={styles.input}
-                />
-              </View>
-
-              <View style={styles.inputWrapper}>
-                <View style={styles.inputIcon}>
-                  <Ionicons
-                    name="lock-closed-outline"
-                    size={20}
-                    color="#B790CB"
-                  />
-                </View>
-
-                <TextInput
-                  placeholderTextColor="#9ca3af"
-                  secureTextEntry={!showPassword}
-                  style={styles.input}
-                  placeholder={t("authLogin.passwordPlaceholder")}
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setError("");
-                  }}
-                />
-
-                <Pressable
-                  style={styles.eyeButton}
-                  onPress={() => setShowPassword((v) => !v)}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off-outline" : "eye-outline"}
-                    size={20}
-                    color="#9ca3af"
-                  />
-                </Pressable>
-              </View>
-
-              {error ? <Text style={styles.error}>{error}</Text> : null}
-
-              <Pressable style={styles.forgot}>
-                <Text style={styles.forgotText}>
-                  {t("authLogin.forgotPassword")}
+            {/* primary */}
+            <Animated.View style={{ transform: [{ scale: loginScale }] }}>
+              <Pressable
+                style={styles.primaryButton}
+                onPressIn={() => pressIn(loginScale)}
+                onPressOut={() => pressOut(loginScale)}
+                onHoverIn={() => hoverIn(loginScale, 1.03)}
+                onHoverOut={() => hoverOut(loginScale)}
+                onPress={loginUser}
+              >
+                <Text style={styles.primaryButtonText}>
+                  {t("authLogin.login")}
                 </Text>
               </Pressable>
+            </Animated.View>
 
-              {/* primary */}
-              <Animated.View style={{ transform: [{ scale: loginScale }] }}>
-                <Pressable
-                  style={styles.primaryButton}
-                  onPressIn={() => pressIn(loginScale)}
-                  onPressOut={() => pressOut(loginScale)}
-                  onHoverIn={() => hoverIn(loginScale, 1.03)}
-                  onHoverOut={() => hoverOut(loginScale)}
-                  onPress={loginUser}
-                >
-                  <Text style={styles.primaryButtonText}>
-                    {t("authLogin.login")}
-                  </Text>
-                </Pressable>
-              </Animated.View>
+            {/* guest */}
+            <Animated.View style={{ transform: [{ scale: guestScale }] }}>
+              <Pressable
+                style={styles.outlineButton}
+                onPress={closeModal}
+                onPressIn={() => pressIn(guestScale)}
+                onPressOut={() => pressOut(guestScale)}
+                onHoverIn={() => hoverIn(guestScale, 1.025)}
+                onHoverOut={() => hoverOut(guestScale)}
+              >
+                <Text style={styles.outlineButtonText}>
+                  {t("authLogin.continueAsGuest")}
+                </Text>
+              </Pressable>
+            </Animated.View>
+          </View>
 
-              {/* guest */}
-              <Animated.View style={{ transform: [{ scale: guestScale }] }}>
-                <Pressable
-                  style={styles.outlineButton}
-                  onPress={() => router.back()}
-                  onPressIn={() => pressIn(guestScale)}
-                  onPressOut={() => pressOut(guestScale)}
-                  onHoverIn={() => hoverIn(guestScale, 1.025)}
-                  onHoverOut={() => hoverOut(guestScale)}
-                >
-                  <Text style={styles.outlineButtonText}>
-                    {t("authLogin.continueAsGuest")}
-                  </Text>
-                </Pressable>
-              </Animated.View>
-            </View>
+          {/* divider */}
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>{t("authLogin.divider")}</Text>
+            <View style={styles.dividerLine} />
+          </View>
 
-            {/* divider */}
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>{t("authLogin.divider")}</Text>
-              <View style={styles.dividerLine} />
-            </View>
+          {/* socials */}
+          <View style={styles.socials}>
+            <Animated.View style={{ transform: [{ scale: googleScale }] }}>
+              <Pressable
+                style={styles.socialButton}
+                onPressIn={() => pressIn(googleScale)}
+                onPressOut={() => pressOut(googleScale)}
+                onHoverIn={() => hoverIn(googleScale, 1.06)}
+                onHoverOut={() => hoverOut(googleScale)}
+              >
+                <Ionicons name="logo-google" size={22} />
+              </Pressable>
+            </Animated.View>
 
-            {/* socials */}
-            <View style={styles.socials}>
-              <Animated.View style={{ transform: [{ scale: googleScale }] }}>
-                <Pressable
-                  style={styles.socialButton}
-                  onPressIn={() => pressIn(googleScale)}
-                  onPressOut={() => pressOut(googleScale)}
-                  onHoverIn={() => hoverIn(googleScale, 1.06)}
-                  onHoverOut={() => hoverOut(googleScale)}
-                >
-                  <Ionicons name="logo-google" size={22} />
-                </Pressable>
-              </Animated.View>
+            <Animated.View style={{ transform: [{ scale: appleScale }] }}>
+              <Pressable
+                style={styles.socialButton}
+                onPressIn={() => pressIn(appleScale)}
+                onPressOut={() => pressOut(appleScale)}
+                onHoverIn={() => hoverIn(appleScale, 1.06)}
+                onHoverOut={() => hoverOut(appleScale)}
+              >
+                <Ionicons name="logo-apple" size={22} />
+              </Pressable>
+            </Animated.View>
+          </View>
 
-              <Animated.View style={{ transform: [{ scale: appleScale }] }}>
-                <Pressable
-                  style={styles.socialButton}
-                  onPressIn={() => pressIn(appleScale)}
-                  onPressOut={() => pressOut(appleScale)}
-                  onHoverIn={() => hoverIn(appleScale, 1.06)}
-                  onHoverOut={() => hoverOut(appleScale)}
-                >
-                  <Ionicons name="logo-apple" size={22} />
-                </Pressable>
-              </Animated.View>
-            </View>
-
-            {/* footer */}
-            <Text style={styles.footer}>
-              {t("authLogin.termsText")}
-              {"\n"}
-              <Text style={styles.link}>{t("authLogin.terms")}</Text>{" "}
-              {t("authLogin.and")}{" "}
-              <Text style={styles.link}>{t("authLogin.privacy")}</Text>
-            </Text>
-          </ScrollView>
-        </Animated.View>
-      </View>
-    </Modal>
+          {/* footer */}
+          <Text style={styles.footer}>
+            {t("authLogin.termsText")}
+            {"\n"}
+            <Text style={styles.link}>{t("authLogin.terms")}</Text>{" "}
+            {t("authLogin.and")}{" "}
+            <Text style={styles.link}>{t("authLogin.privacy")}</Text>
+          </Text>
+        </ScrollView>
+      </Animated.View>
+    </View>
   );
 }
 

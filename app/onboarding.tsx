@@ -108,7 +108,7 @@ export default function Onboarding() {
     } catch {}
 
     await AsyncStorage.setItem("onboardingCompleted", "true");
-    router.replace("/(tabs)");
+    router.replace("/login");
   };
 
   const goToIndex = (i: number) => {

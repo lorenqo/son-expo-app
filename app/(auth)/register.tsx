@@ -20,6 +20,14 @@ import { StyleSheet } from "react-native-unistyles";
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
+  const closeModal = () => {
+    if (!router.canGoBack()) {
+      router.replace("/");
+      return;
+    }
+
+    router.back();
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -183,7 +191,7 @@ export default function RegisterScreen() {
       }
 
       await login(createUser(user));
-      router.back();
+      closeModal();
     } catch {
       setError(t("authRegister.errorServer"));
     } finally {
@@ -206,7 +214,7 @@ export default function RegisterScreen() {
         >
           {/* top action */}
           <View style={styles.topBar}>
-            <Pressable style={styles.topButton} onPress={() => router.back()}>
+            <Pressable style={styles.topButton} onPress={closeModal}>
               <Text style={styles.closeText}>✕</Text>
             </Pressable>
 
