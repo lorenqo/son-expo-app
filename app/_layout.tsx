@@ -3,8 +3,9 @@ import { auth } from "@/services/requests";
 import "@/src/i18n";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
+import "../global.css";
 import { hydrateAuth, logout, syncUser } from "../store/authStore";
-
+import ConnectionGuard from "./ConnectionGuard";
 export default function RootLayout() {
   const [ready, setReady] = useState(false);
 
@@ -30,20 +31,22 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: "#1C0F21" },
-      }}
-    >
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen
-        name="(auth)"
-        options={{
-          presentation: "modal",
-          animation: "fade",
+    <ConnectionGuard>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "#1C0F21" },
         }}
-      />
-    </Stack>
+      >
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="(auth)"
+          options={{
+            presentation: "modal",
+            animation: "fade",
+          }}
+        />
+      </Stack>
+    </ConnectionGuard>
   );
 }

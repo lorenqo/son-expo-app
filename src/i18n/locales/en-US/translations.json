@@ -90,5 +90,11 @@
     "terms": "Terms of Use",
     "and": "and",
     "privacy": "Privacy Policy"
+  },
+  "offline": {
+    "title": "Connection lost",
+    "subtitle": "Connection to the dream world has been lost. Check your internet connection to continue interpretation.",
+    "retry": "Try again",
+    "savedDreams": "Go to saved dreams"
   }
 }
