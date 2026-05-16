@@ -4,10 +4,11 @@ import { createUser } from "@/models/user";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Animated,
+  Easing,
   Platform,
   Pressable,
   ScrollView,
@@ -15,9 +16,24 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
 import { checkEmail, loginRequest } from "../../services/requests";
 import { login } from "../../store/authStore";
+
+const NEON_SHADOW = {
+  shadowColor: "#A60DF2",
+  shadowOpacity: 0.6,
+  shadowRadius: 20,
+  shadowOffset: { width: 0, height: 0 },
+  elevation: 10,
+} as const;
+
+const SOFT_SHADOW = {
+  shadowColor: "#000",
+  shadowOpacity: 0.25,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 6 },
+  elevation: 6,
+} as const;
 
 export default function Login() {
   const { t } = useTranslation();
@@ -40,15 +56,13 @@ export default function Login() {
 
   const isSubmitDisabled = loading || checkingEmail || Boolean(emailError);
 
-  /* ================= animations ================= */
+  const fadeOut = useRef(new Animated.Value(0)).current;
 
   const screen = useScreenAnimation();
   const loginAnim = useButtonAnimation(1.03);
   const guestAnim = useButtonAnimation(1.025);
   const googleAnim = useButtonAnimation(1.06);
   const appleAnim = useButtonAnimation(1.06);
-
-  /* ================= logic ================= */
 
   const handleEmailBlur = async () => {
     if (!email || !email.includes("@")) return;
@@ -79,8 +93,14 @@ export default function Login() {
         setError(t("authLogin.errorWrongLoginData"));
         return;
       }
-      await login(createUser(user));
-      closeModal();
+      Animated.timing(fadeOut, {
+        toValue: 1,
+        duration: 320,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      }).start(async () => {
+        await login(createUser(user));
+      });
     } catch {
       setError(t("authLogin.errorServer"));
     } finally {
@@ -88,10 +108,8 @@ export default function Login() {
     }
   };
 
-  /* ================= render ================= */
-
   return (
-    <View style={styles.root}>
+    <View className="flex-1 bg-[#1C1022]">
       <Animated.View
         style={{
           flex: 1,
@@ -100,44 +118,64 @@ export default function Login() {
         }}
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: 24,
+            paddingBottom: 32,
+            ...(Platform.OS === "web" && {
+              maxWidth: 620,
+              width: "100%",
+              alignSelf: "center",
+            }),
+          }}
           keyboardShouldPersistTaps="handled"
         >
           {/* top action */}
-          <View style={styles.topBar}>
-            <Pressable style={styles.topButton} onPress={closeModal}>
-              <Text style={styles.closeText}>✕</Text>
+          <View className="flex-row items-center justify-between mt-16">
+            <Pressable
+              className="h-9 px-4 rounded-full border border-[rgba(255,255,255,0.08)] bg-white/5 items-center justify-center"
+              onPress={closeModal}
+            >
+              <Text className="text-base leading-[18px] text-[#B790CB]">✕</Text>
             </Pressable>
             <Pressable
-              style={styles.topButton}
+              className="h-9 px-4 rounded-full border border-[rgba(255,255,255,0.08)] bg-white/5 items-center justify-center"
               onPress={() => router.replace("../register")}
             >
-              <Text style={styles.secondaryButtonText}>
+              <Text className="text-sm font-medium leading-[18px] text-[#B790CB]">
                 {t("authLogin.register")}
               </Text>
             </Pressable>
           </View>
 
           {/* header */}
-          <View style={styles.header}>
-            <View style={styles.avatarWrapper}>
+          <View className="items-center mt-6">
+            <View
+              className="w-24 h-24 rounded-full items-center justify-center"
+              style={{ ...NEON_SHADOW, borderWidth: 2, borderColor: "#A60DF2" }}
+            >
               <Image
                 source={require("../../assets/images/login_avatar.png")}
                 style={{ width: 84, height: 84, borderRadius: 42 }}
                 contentFit="cover"
               />
             </View>
-            <Text style={styles.title}>{t("authLogin.title")}</Text>
-            <Text style={styles.subtitle}>{t("authLogin.subtitle")}</Text>
+            <Text className="mt-4 text-[28px] font-bold text-white">
+              {t("authLogin.title")}
+            </Text>
+            <Text className="mt-2 text-center text-[#B790CB] leading-[22px]">
+              {t("authLogin.subtitle")}
+            </Text>
           </View>
 
           {/* form */}
-          <View style={styles.form}>
-            <View style={styles.inputWrapper}>
-              <View style={styles.inputIcon}>
+          <View className="mt-8 gap-4">
+            <View className="flex-row items-center rounded-full bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]">
+              <View className="ml-4">
                 <Ionicons name="mail-outline" size={20} color="#B790CB" />
               </View>
               <TextInput
+                className="flex-1 py-4 px-2 text-white"
                 placeholderTextColor="#9ca3af"
                 placeholder={t("authLogin.emailPlaceholder")}
                 value={email}
@@ -147,12 +185,11 @@ export default function Login() {
                 }}
                 onBlur={handleEmailBlur}
                 autoCapitalize="none"
-                style={styles.input}
               />
             </View>
 
-            <View style={styles.inputWrapper}>
-              <View style={styles.inputIcon}>
+            <View className="flex-row items-center rounded-full bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]">
+              <View className="ml-4">
                 <Ionicons
                   name="lock-closed-outline"
                   size={20}
@@ -160,9 +197,9 @@ export default function Login() {
                 />
               </View>
               <TextInput
+                className="flex-1 py-4 px-2 text-white"
                 placeholderTextColor="#9ca3af"
                 secureTextEntry={!showPassword}
-                style={styles.input}
                 placeholder={t("authLogin.passwordPlaceholder")}
                 value={password}
                 onChangeText={(text) => {
@@ -171,7 +208,7 @@ export default function Login() {
                 }}
               />
               <Pressable
-                style={styles.eyeButton}
+                className="px-4"
                 onPress={() => setShowPassword((v) => !v)}
               >
                 <Ionicons
@@ -182,10 +219,14 @@ export default function Login() {
               </Pressable>
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? (
+              <Text className="text-[#F87171] mb-[10px] text-center">
+                {error}
+              </Text>
+            ) : null}
 
-            <Pressable style={styles.forgot}>
-              <Text style={styles.forgotText}>
+            <Pressable className="self-end">
+              <Text className="text-[#A60DF2] font-medium">
                 {t("authLogin.forgotPassword")}
               </Text>
             </Pressable>
@@ -193,7 +234,8 @@ export default function Login() {
             {/* primary */}
             <Animated.View style={{ transform: [{ scale: loginAnim.scale }] }}>
               <Pressable
-                style={styles.primaryButton}
+                className="mt-2 rounded-full py-4 items-center bg-[#A60DF2]"
+                style={NEON_SHADOW}
                 disabled={isSubmitDisabled}
                 onPressIn={loginAnim.pressIn}
                 onPressOut={loginAnim.pressOut}
@@ -201,7 +243,7 @@ export default function Login() {
                 onHoverOut={loginAnim.hoverOut}
                 onPress={loginUser}
               >
-                <Text style={styles.primaryButtonText}>
+                <Text className="text-white text-base font-bold">
                   {t("authLogin.login")}
                 </Text>
               </Pressable>
@@ -210,14 +252,14 @@ export default function Login() {
             {/* guest */}
             <Animated.View style={{ transform: [{ scale: guestAnim.scale }] }}>
               <Pressable
-                style={styles.outlineButton}
+                className="rounded-full py-4 items-center border border-[rgba(255,255,255,0.08)]"
                 onPress={closeModal}
                 onPressIn={guestAnim.pressIn}
                 onPressOut={guestAnim.pressOut}
                 onHoverIn={guestAnim.hoverIn}
                 onHoverOut={guestAnim.hoverOut}
               >
-                <Text style={styles.outlineButtonText}>
+                <Text className="text-white font-medium">
                   {t("authLogin.continueAsGuest")}
                 </Text>
               </Pressable>
@@ -225,17 +267,20 @@ export default function Login() {
           </View>
 
           {/* divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>{t("authLogin.divider")}</Text>
-            <View style={styles.dividerLine} />
+          <View className="mt-8 flex-row items-center gap-4">
+            <View className="flex-1 h-px bg-white/8" />
+            <Text className="text-[#B790CB] text-[13px]">
+              {t("authLogin.divider")}
+            </Text>
+            <View className="flex-1 h-px bg-white/8" />
           </View>
 
           {/* socials */}
-          <View style={styles.socials}>
+          <View className="mt-6 flex-row justify-center gap-6">
             <Animated.View style={{ transform: [{ scale: googleAnim.scale }] }}>
               <Pressable
-                style={styles.socialButton}
+                className="w-14 h-14 rounded-full items-center justify-center bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]"
+                style={SOFT_SHADOW}
                 onPressIn={googleAnim.pressIn}
                 onPressOut={googleAnim.pressOut}
                 onHoverIn={googleAnim.hoverIn}
@@ -247,7 +292,8 @@ export default function Login() {
 
             <Animated.View style={{ transform: [{ scale: appleAnim.scale }] }}>
               <Pressable
-                style={styles.socialButton}
+                className="w-14 h-14 rounded-full items-center justify-center bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]"
+                style={SOFT_SHADOW}
                 onPressIn={appleAnim.pressIn}
                 onPressOut={appleAnim.pressOut}
                 onHoverIn={appleAnim.hoverIn}
@@ -259,190 +305,29 @@ export default function Login() {
           </View>
 
           {/* footer */}
-          <Text style={styles.footer}>
+          <Text className="mt-8 text-center text-[12px] text-[#B790CB]">
             {t("authLogin.termsText")}
             {"\n"}
-            <Text style={styles.link}>{t("authLogin.terms")}</Text>{" "}
+            <Text className="underline text-[#A60DF2]">
+              {t("authLogin.terms")}
+            </Text>{" "}
             {t("authLogin.and")}{" "}
-            <Text style={styles.link}>{t("authLogin.privacy")}</Text>
+            <Text className="underline text-[#A60DF2]">
+              {t("authLogin.privacy")}
+            </Text>
           </Text>
         </ScrollView>
       </Animated.View>
+
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: "#1C1022",
+          opacity: fadeOut,
+        }}
+      />
     </View>
   );
 }
-
-/* ================= styles ================= */
-
-const styles = StyleSheet.create((theme) => ({
-  root: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  scroll: {
-    flexGrow: 1,
-    paddingHorizontal: theme.gap(3),
-    paddingBottom: theme.gap(4),
-    ...(Platform.OS === "web" && {
-      maxWidth: 620,
-      width: "100%",
-      alignSelf: "center",
-    }),
-  },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: theme.gap(6),
-  },
-  topButton: {
-    height: 36,
-    paddingHorizontal: theme.gap(2),
-    borderRadius: theme.radius.full,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surfaceTranslucent,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 18,
-    color: theme.colors.dimmed,
-  },
-  closeText: {
-    fontSize: 16,
-    lineHeight: 18,
-    color: theme.colors.dimmed,
-  },
-  header: {
-    alignItems: "center",
-    marginTop: theme.gap(3),
-  },
-  avatarWrapper: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: theme.colors.tint,
-    ...theme.shadows.neon,
-  },
-  title: {
-    marginTop: theme.gap(2),
-    fontSize: 28,
-    fontWeight: "700",
-    color: theme.colors.typography,
-  },
-  subtitle: {
-    marginTop: theme.gap(1),
-    textAlign: "center",
-    color: theme.colors.dimmed,
-    lineHeight: 22,
-  },
-  form: {
-    marginTop: theme.gap(4),
-    gap: theme.gap(2),
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: theme.radius.full,
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  inputIcon: {
-    marginLeft: theme.gap(2),
-  },
-  input: {
-    flex: 1,
-    paddingVertical: theme.gap(2),
-    paddingHorizontal: theme.gap(1),
-    color: theme.colors.typography,
-    outlineWidth: 0,
-  },
-  eyeButton: {
-    paddingHorizontal: theme.gap(2),
-  },
-  forgot: {
-    alignSelf: "flex-end",
-  },
-  forgotText: {
-    color: theme.colors.link,
-    fontWeight: "500",
-  },
-  primaryButton: {
-    marginTop: theme.gap(1),
-    borderRadius: theme.radius.full,
-    paddingVertical: theme.gap(2),
-    alignItems: "center",
-    backgroundColor: theme.colors.tint,
-    ...theme.shadows.neon,
-  },
-  primaryButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  outlineButton: {
-    borderRadius: theme.radius.full,
-    paddingVertical: theme.gap(2),
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  outlineButtonText: {
-    color: theme.colors.typography,
-    fontWeight: "500",
-  },
-  error: {
-    color: "red",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  divider: {
-    marginTop: theme.gap(4),
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.gap(2),
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.border,
-  },
-  dividerText: {
-    color: theme.colors.dimmed,
-    fontSize: 13,
-  },
-  socials: {
-    marginTop: theme.gap(3),
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: theme.gap(3),
-  },
-  socialButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    ...theme.shadows.soft,
-  },
-  footer: {
-    marginTop: theme.gap(4),
-    textAlign: "center",
-    fontSize: 12,
-    color: theme.colors.dimmed,
-  },
-  link: {
-    textDecorationLine: "underline",
-    color: theme.colors.link,
-  },
-}));

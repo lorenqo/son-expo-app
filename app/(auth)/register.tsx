@@ -17,7 +17,14 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
+
+const NEON_SHADOW = {
+  shadowColor: "#A60DF2",
+  shadowOpacity: 0.6,
+  shadowRadius: 20,
+  shadowOffset: { width: 0, height: 0 },
+  elevation: 10,
+} as const;
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -39,14 +46,10 @@ export default function RegisterScreen() {
   const [checkingEmail, setCheckingEmail] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  /* ================= animations ================= */
-
   const screen = useScreenAnimation();
   const primaryAnim = useButtonAnimation(1.03);
   const googleAnim = useButtonAnimation(1.06);
   const appleAnim = useButtonAnimation(1.06);
-
-  /* ================= logic ================= */
 
   const isSubmitDisabled = loading;
 
@@ -123,7 +126,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <View className="flex-1 bg-[#1C1022]">
       <Animated.View
         style={{
           flex: 1,
@@ -132,44 +135,64 @@ export default function RegisterScreen() {
         }}
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: 24,
+            paddingBottom: 32,
+            ...(Platform.OS === "web" && {
+              maxWidth: 620,
+              width: "100%",
+              alignSelf: "center",
+            }),
+          }}
           keyboardShouldPersistTaps="handled"
         >
           {/* top action */}
-          <View style={styles.topBar}>
-            <Pressable style={styles.topButton} onPress={closeModal}>
-              <Text style={styles.closeText}>✕</Text>
+          <View className="flex-row items-center justify-between mt-16">
+            <Pressable
+              className="h-9 px-4 rounded-full border border-[rgba(255,255,255,0.08)] bg-white/5 items-center justify-center"
+              onPress={closeModal}
+            >
+              <Text className="text-base leading-[18px] text-[#B790CB]">✕</Text>
             </Pressable>
             <Pressable
-              style={styles.topButton}
+              className="h-9 px-4 rounded-full border border-[rgba(255,255,255,0.08)] bg-white/5 items-center justify-center"
               onPress={() => router.replace("../login")}
             >
-              <Text style={styles.secondaryButtonText}>
+              <Text className="text-sm font-medium leading-[18px] text-[#B790CB]">
                 {t("authLogin.login")}
               </Text>
             </Pressable>
           </View>
 
           {/* header */}
-          <View style={styles.header}>
-            <View style={styles.avatarWrapper}>
+          <View className="items-center mt-6">
+            <View
+              className="w-24 h-24 rounded-full items-center justify-center border-2 border-[#A60DF2]"
+              style={NEON_SHADOW}
+            >
               <Image
                 source={require("../../assets/images/login_avatar.png")}
                 style={{ width: 84, height: 84, borderRadius: 42 }}
                 contentFit="cover"
               />
             </View>
-            <Text style={styles.title}>{t("authRegister.title")}</Text>
-            <Text style={styles.subtitle}>{t("authRegister.subtitle")}</Text>
+            <Text className="mt-4 text-[28px] font-bold text-white">
+              {t("authRegister.title")}
+            </Text>
+            <Text className="mt-2 text-center text-[#B790CB] leading-[22px] max-w-[340px]">
+              {t("authRegister.subtitle")}
+            </Text>
           </View>
 
           {/* form */}
-          <View style={styles.form}>
-            <View style={styles.inputWrapper}>
-              <View style={styles.inputIcon}>
+          <View className="mt-8 gap-4">
+            <View className="flex-row items-center rounded-full bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]">
+              <View className="ml-4">
                 <Ionicons name="person-outline" size={20} color="#B790CB" />
               </View>
               <TextInput
+                className="flex-1 py-4 px-2 text-white"
                 placeholderTextColor="#9ca3af"
                 placeholder={t("authRegister.namePlaceholder")}
                 value={name}
@@ -177,15 +200,15 @@ export default function RegisterScreen() {
                   setName(text);
                   setError("");
                 }}
-                style={styles.input}
               />
             </View>
 
-            <View style={styles.inputWrapper}>
-              <View style={styles.inputIcon}>
+            <View className="flex-row items-center rounded-full bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]">
+              <View className="ml-4">
                 <Ionicons name="mail-outline" size={20} color="#B790CB" />
               </View>
               <TextInput
+                className="flex-1 py-4 px-2 text-white"
                 placeholderTextColor="#9ca3af"
                 placeholder={t("authRegister.emailPlaceholder")}
                 value={email}
@@ -196,14 +219,15 @@ export default function RegisterScreen() {
                 onBlur={handleEmailBlur}
                 autoCapitalize="none"
                 keyboardType="email-address"
-                style={styles.input}
               />
             </View>
 
-            {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+            {emailError ? (
+              <Text className="text-[#F87171] mt-2 text-center">{emailError}</Text>
+            ) : null}
 
-            <View style={styles.inputWrapper}>
-              <View style={styles.inputIcon}>
+            <View className="flex-row items-center rounded-full bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]">
+              <View className="ml-4">
                 <Ionicons
                   name="lock-closed-outline"
                   size={20}
@@ -211,9 +235,9 @@ export default function RegisterScreen() {
                 />
               </View>
               <TextInput
+                className="flex-1 py-4 px-2 text-white"
                 placeholderTextColor="#9ca3af"
                 secureTextEntry={!showPassword}
-                style={styles.input}
                 placeholder={t("authRegister.passwordPlaceholder")}
                 value={password}
                 onChangeText={(text) => {
@@ -222,7 +246,7 @@ export default function RegisterScreen() {
                 }}
               />
               <Pressable
-                style={styles.eyeButton}
+                className="px-4"
                 onPress={() => setShowPassword((v) => !v)}
               >
                 <Ionicons
@@ -234,20 +258,22 @@ export default function RegisterScreen() {
             </View>
 
             {password ? (
-              <Text style={styles.hint}>{t("authRegister.passwordHint")}</Text>
+              <Text className="mt-[6px] text-[12px] text-center text-[#777]">
+                {t("authRegister.passwordHint")}
+              </Text>
             ) : null}
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? (
+              <Text className="text-[#F87171] mt-2 text-center">{error}</Text>
+            ) : null}
 
             {/* primary button */}
             <Animated.View
               style={{ transform: [{ scale: primaryAnim.scale }] }}
             >
               <Pressable
-                style={[
-                  styles.primaryButton,
-                  isSubmitDisabled && styles.primaryButtonDisabled,
-                ]}
+                className={`mt-2 rounded-full py-4 items-center bg-[#A60DF2]${isSubmitDisabled ? " opacity-70" : ""}`}
+                style={NEON_SHADOW}
                 disabled={isSubmitDisabled}
                 onPressIn={primaryAnim.pressIn}
                 onPressOut={primaryAnim.pressOut}
@@ -255,7 +281,7 @@ export default function RegisterScreen() {
                 onHoverOut={primaryAnim.hoverOut}
                 onPress={registerUser}
               >
-                <Text style={styles.primaryButtonText}>
+                <Text className="text-white text-base font-bold">
                   {t("authRegister.createAccount")}
                 </Text>
               </Pressable>
@@ -263,17 +289,19 @@ export default function RegisterScreen() {
           </View>
 
           {/* divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>{t("authRegister.divider")}</Text>
-            <View style={styles.dividerLine} />
+          <View className="mt-8 flex-row items-center gap-4">
+            <View className="flex-1 h-px bg-white/8" />
+            <Text className="text-[#B790CB] text-[13px]">
+              {t("authRegister.divider")}
+            </Text>
+            <View className="flex-1 h-px bg-white/8" />
           </View>
 
           {/* socials */}
-          <View style={styles.socials}>
+          <View className="mt-6 flex-row justify-center gap-6">
             <Animated.View style={{ transform: [{ scale: googleAnim.scale }] }}>
               <Pressable
-                style={styles.socialButton}
+                className="w-14 h-14 rounded-full items-center justify-center bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]"
                 onPressIn={googleAnim.pressIn}
                 onPressOut={googleAnim.pressOut}
                 onHoverIn={googleAnim.hoverIn}
@@ -285,7 +313,7 @@ export default function RegisterScreen() {
 
             <Animated.View style={{ transform: [{ scale: appleAnim.scale }] }}>
               <Pressable
-                style={styles.socialButton}
+                className="w-14 h-14 rounded-full items-center justify-center bg-[#2A1B32] border border-[rgba(255,255,255,0.08)]"
                 onPressIn={appleAnim.pressIn}
                 onPressOut={appleAnim.pressOut}
                 onHoverIn={appleAnim.hoverIn}
@@ -297,12 +325,21 @@ export default function RegisterScreen() {
           </View>
 
           {/* footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>{t("authRegister.termsText")}</Text>
-            <View style={styles.footerRow}>
-              <Text style={styles.link}>{t("authRegister.terms")}</Text>
-              <Text style={styles.footerText}> {t("authRegister.and")} </Text>
-              <Text style={styles.link}>{t("authRegister.privacy")}</Text>
+          <View className="mt-8 items-center">
+            <Text className="text-[12px] text-[#B790CB] text-center">
+              {t("authRegister.termsText")}
+            </Text>
+            <View className="flex-row flex-wrap justify-center">
+              <Text className="underline text-[#A60DF2]">
+                {t("authRegister.terms")}
+              </Text>
+              <Text className="text-[12px] text-[#B790CB] text-center">
+                {" "}
+                {t("authRegister.and")}{" "}
+              </Text>
+              <Text className="underline text-[#A60DF2]">
+                {t("authRegister.privacy")}
+              </Text>
             </View>
           </View>
         </ScrollView>
@@ -310,177 +347,3 @@ export default function RegisterScreen() {
     </View>
   );
 }
-
-/* ================= styles ================= */
-
-const styles = StyleSheet.create((theme) => ({
-  root: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  scroll: {
-    flexGrow: 1,
-    paddingHorizontal: theme.gap(3),
-    paddingBottom: theme.gap(4),
-    ...(Platform.OS === "web" && {
-      maxWidth: 620,
-      width: "100%",
-      alignSelf: "center",
-    }),
-  },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: theme.gap(6),
-  },
-  topButton: {
-    height: 36,
-    paddingHorizontal: theme.gap(2),
-    borderRadius: theme.radius.full,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.overlay,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 18,
-    color: theme.colors.dimmed,
-  },
-  closeText: {
-    fontSize: 16,
-    lineHeight: 18,
-    color: theme.colors.dimmed,
-  },
-  header: {
-    alignItems: "center",
-    marginTop: theme.gap(3),
-  },
-  avatarWrapper: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: theme.colors.tint,
-    ...theme.shadows.neon,
-  },
-  title: {
-    marginTop: theme.gap(2),
-    fontSize: 28,
-    fontWeight: "700",
-    color: theme.colors.typography,
-  },
-  subtitle: {
-    marginTop: theme.gap(1),
-    textAlign: "center",
-    color: theme.colors.dimmed,
-    lineHeight: 22,
-    maxWidth: 340,
-  },
-  form: {
-    marginTop: theme.gap(4),
-    gap: theme.gap(2),
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: theme.radius.full,
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  inputIcon: {
-    marginLeft: theme.gap(2),
-  },
-  input: {
-    flex: 1,
-    paddingVertical: theme.gap(2),
-    paddingHorizontal: theme.gap(1),
-    color: theme.colors.typography,
-    outlineWidth: 0,
-  },
-  eyeButton: {
-    paddingHorizontal: theme.gap(2),
-  },
-  hint: {
-    marginTop: 6,
-    fontSize: 12,
-    textAlign: "center",
-    color: "#777",
-  },
-  error: {
-    color: theme.colors.danger ?? "red",
-    marginTop: theme.gap(1),
-    textAlign: "center",
-  },
-  primaryButton: {
-    marginTop: theme.gap(1),
-    borderRadius: theme.radius.full,
-    paddingVertical: theme.gap(2),
-    alignItems: "center",
-    backgroundColor: theme.colors.tint,
-    ...theme.shadows.neon,
-  },
-  primaryButtonDisabled: {
-    opacity: 0.7,
-  },
-  primaryButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  divider: {
-    marginTop: theme.gap(4),
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.gap(2),
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.border,
-  },
-  dividerText: {
-    color: theme.colors.dimmed,
-    fontSize: 13,
-  },
-  socials: {
-    marginTop: theme.gap(3),
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: theme.gap(3),
-  },
-  socialButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  footer: {
-    marginTop: theme.gap(4),
-    alignItems: "center",
-  },
-  footerRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  footerText: {
-    fontSize: 12,
-    color: theme.colors.dimmed,
-    textAlign: "center",
-  },
-  link: {
-    textDecorationLine: "underline",
-    color: theme.colors.link,
-  },
-}));

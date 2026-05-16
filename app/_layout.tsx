@@ -1,13 +1,18 @@
 import { initCookies } from "@/services/cookies";
 import { auth } from "@/services/requests";
 import "@/src/i18n";
-import { Stack } from "expo-router";
+import { useAuth } from "@/store/useAuth";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import "../global.css";
 import { hydrateAuth, logout, syncUser } from "../store/authStore";
 import ConnectionGuard from "./ConnectionGuard";
+
 export default function RootLayout() {
   const [ready, setReady] = useState(false);
+  const { user, hydrated } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
 
   async function checkAuth() {
     const res = await auth();
@@ -28,6 +33,16 @@ export default function RootLayout() {
     run();
   }, []);
 
+  // Реагируем на изменение auth стейта — когда user появляется
+  // и мы всё ещё на (auth) экране, переходим в приложение
+  useEffect(() => {
+    if (!ready || !hydrated) return;
+    const inAuth = segments[0] === "(auth)";
+    if (user && inAuth) {
+      router.replace("/(tabs)");
+    }
+  }, [user, hydrated, ready, segments]);
+
   if (!ready) return null;
 
   return (
@@ -35,10 +50,11 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: "#1C0F21" },
+          contentStyle: { backgroundColor: "#1C1022" },
         }}
       >
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="chat" options={{ animation: "fade" }} />
         <Stack.Screen
           name="(auth)"
           options={{

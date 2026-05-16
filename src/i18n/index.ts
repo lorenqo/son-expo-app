@@ -16,7 +16,7 @@ const resources = {
   ua: { translation: translationUa },
 }
 
-const RTL_LANGUAGES = ['ua', 'ua-UA']
+const RTL_LANGUAGES: string[] = []
 
 const LANGUAGE_KEY = '@app_language'
 

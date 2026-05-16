@@ -14,14 +14,13 @@ import {
   Text,
   View,
 } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
 import { getOnboardingSlides } from "../src/onboardingSlides";
 
 /* ================= CONST ================= */
 
 const DOT_SIZE = 8;
-const DOT_GAP = 10;
-const DOT_ACTIVE_WIDTH = 20;
+const DOT_GAP = 12;
+const DOT_ACTIVE_WIDTH = 17;
 
 const DOT_STEP = DOT_SIZE + DOT_GAP;
 
@@ -132,16 +131,24 @@ export default function Onboarding() {
   /* ================= RENDER ================= */
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#1C1022]">
       {/* Progress */}
-      <View style={styles.progressTrack}>
-        <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
+      <View className="h-1 bg-[#24152B]">
+        <Animated.View
+          className="h-1 bg-[#A60DF2]"
+          style={{ width: progressWidth }}
+        />
       </View>
 
       {/* Skip */}
       {!SLIDES[index].final && (
-        <Pressable style={styles.skip} onPress={finish}>
-          <Text style={styles.skipText}>{t("onboarding.skip")}</Text>
+        <Pressable
+          className="absolute top-[52px] right-6 z-10"
+          onPress={finish}
+        >
+          <Text className="text-[#B790CB] text-sm font-semibold">
+            {t("onboarding.skip")}
+          </Text>
         </Pressable>
       )}
 
@@ -162,27 +169,42 @@ export default function Onboarding() {
         viewabilityConfig={viewabilityConfig}
         renderItem={({ item }) => (
           <View style={{ width, height: SLIDE_HEIGHT }}>
-            <View style={styles.slide}>
+            <View className="flex-1 justify-center items-center px-6">
               {item.final ? (
                 <>
-                  <View style={styles.permissionIcon}>
+                  <View className="w-40 h-40 rounded-full justify-center items-center mb-8 bg-[#A60DF2]/15">
                     <Ionicons name="notifications" size={90} color="white" />
                   </View>
 
-                  <Text style={styles.permissionTitle}>{item.title}</Text>
+                  <Text className="text-white text-[28px] font-bold text-center mb-4 leading-[34px]">
+                    {item.title}
+                  </Text>
 
-                  <Text style={styles.permissionDescription}>
+                  <Text className="text-[#B790CB] text-[15px] text-center leading-[22px] max-w-[300px] mb-4">
                     {item.description}
                   </Text>
 
-                  <Text style={styles.permissionHint}>{item.hint}</Text>
+                  <Text className="text-[#B790CB] text-[13px] text-center opacity-80">
+                    {item.hint}
+                  </Text>
                 </>
               ) : (
                 <>
                   <Animated.View
                     style={{ transform: [{ translateY: floatAnim }] }}
                   >
-                    <View style={styles.imageWrapper}>
+                    <View
+                      style={{
+                        width: 260,
+                        height: 260,
+                        borderRadius: 32,
+                        marginBottom: 28,
+                        shadowColor: "#A60DF2",
+                        shadowOpacity: 0.35,
+                        shadowRadius: 24,
+                        elevation: 10,
+                      }}
+                    >
                       <Image
                         source={item.image}
                         contentFit="contain"
@@ -196,8 +218,12 @@ export default function Onboarding() {
                     </View>
                   </Animated.View>
 
-                  <Text style={styles.title}>{item.title}</Text>
-                  <Text style={styles.description}>{item.description}</Text>
+                  <Text className="text-white text-[30px] font-bold text-center mb-[14px] leading-[36px]">
+                    {item.title}
+                  </Text>
+                  <Text className="text-[#B790CB] text-[15px] text-center leading-[22px] max-w-[300px]">
+                    {item.description}
+                  </Text>
                 </>
               )}
             </View>
@@ -206,19 +232,37 @@ export default function Onboarding() {
       />
 
       {/* Bottom */}
-      <View style={styles.bottom}>
+      <View className="px-6 pb-8">
         {/* Dots */}
-        <View style={styles.dotsWrapper}>
-          <View style={[styles.dotsContainer, { width: DOTS_WIDTH }]}>
-            <View style={styles.dotsRow}>
+        <View className="items-center mb-4">
+          <View
+            style={{
+              width: DOTS_WIDTH,
+              height: DOT_SIZE,
+              position: "relative",
+            }}
+          >
+            <View className="flex-row">
               {SLIDES.map((_, i) => (
-                <View key={i} style={styles.dot} />
+                <View
+                  key={i}
+                  className="w-2 h-2 rounded-full bg-[#24152B] opacity-90"
+                  style={{ marginRight: DOT_GAP }}
+                />
               ))}
             </View>
 
             <Animated.View
               style={[
-                styles.activeDot,
+                {
+                  position: "absolute",
+                  top: 0,
+                  left: -6,
+                  width: DOT_ACTIVE_WIDTH,
+                  height: DOT_SIZE,
+                  borderRadius: DOT_SIZE / 2,
+                  backgroundColor: "#A60DF2",
+                },
                 {
                   transform: [
                     {
@@ -239,9 +283,9 @@ export default function Onboarding() {
             onPress={next}
             onPressIn={() => animateTo(0.96)}
             onPressOut={() => animateTo(1)}
-            style={styles.button}
+            className="h-14 rounded-full bg-[#A60DF2] items-center justify-center flex-row w-[300px] self-center gap-2"
           >
-            <Text style={styles.buttonText}>
+            <Text className="text-white text-[18px] font-bold">
               {SLIDES[index].final
                 ? t("onboarding.start")
                 : t("onboarding.next")}
@@ -256,163 +300,3 @@ export default function Onboarding() {
     </View>
   );
 }
-
-/* ================= STYLES ================= */
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-
-  progressTrack: {
-    height: 4,
-    backgroundColor: theme.colors.surfaceAlt,
-  },
-
-  progressBar: {
-    height: 4,
-    backgroundColor: theme.colors.tint,
-  },
-
-  skip: {
-    position: "absolute",
-    top: 52,
-    right: 24,
-    zIndex: 10,
-  },
-
-  skipText: {
-    color: theme.colors.dimmed,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-
-  slide: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-
-  imageWrapper: {
-    width: 260,
-    height: 260,
-    borderRadius: 32,
-    marginBottom: 28,
-    shadowColor: theme.colors.tint,
-    shadowOpacity: 0.35,
-    shadowRadius: 24,
-    elevation: 10,
-  },
-
-  title: {
-    color: theme.colors.typography,
-    fontSize: 30,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 14,
-    lineHeight: 36,
-  },
-
-  description: {
-    // близко к твоему #d1d5db, но завязано на тему
-    color: theme.colors.dimmed,
-    fontSize: 15,
-    textAlign: "center",
-    lineHeight: 22,
-    maxWidth: 300,
-  },
-
-  permissionIcon: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    // было rgba(166,13,242,0.15) - делаем через tint
-    backgroundColor: "rgba(166,13,242,0.15)" as any,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 32,
-  },
-
-  permissionTitle: {
-    color: theme.colors.typography,
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 16,
-    lineHeight: 34,
-  },
-
-  permissionDescription: {
-    color: theme.colors.dimmed,
-    fontSize: 15,
-    textAlign: "center",
-    lineHeight: 22,
-    maxWidth: 300,
-    marginBottom: 16,
-  },
-
-  permissionHint: {
-    color: theme.colors.dimmed,
-    fontSize: 13,
-    textAlign: "center",
-    opacity: 0.8,
-  },
-
-  bottom: {
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-  },
-
-  dotsWrapper: {
-    alignItems: "center",
-    marginBottom: 16,
-  },
-
-  dotsContainer: {
-    height: 8,
-    position: "relative",
-  },
-
-  dotsRow: {
-    flexDirection: "row",
-  },
-
-  dot: {
-    width: DOT_SIZE,
-    height: DOT_SIZE,
-    borderRadius: DOT_SIZE / 2,
-    // было #563168
-    backgroundColor: theme.colors.surfaceAlt,
-    marginRight: DOT_GAP,
-    opacity: 0.9,
-  },
-
-  activeDot: {
-    position: "absolute",
-    left: -6,
-    width: DOT_ACTIVE_WIDTH,
-    height: DOT_SIZE,
-    borderRadius: DOT_SIZE / 2,
-    backgroundColor: theme.colors.tint,
-  },
-
-  button: {
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: theme.colors.tint,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    width: 300,
-    alignSelf: "center",
-    gap: 8,
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-  },
-}));

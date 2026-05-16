@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native-unistyles";
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
@@ -32,75 +31,26 @@ export default function Index() {
   }, []);
 
   return (
-    <View style={styles.root}>
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.container}>
-          <Text style={styles.title}>{t("index.title")}</Text>
+    <View className="flex-1 bg-[#1C1022] items-center justify-center">
+      <SafeAreaView className="flex-1 bg-transparent">
+        <View className="flex-1 items-center justify-center px-6 py-8">
+          <Text className="text-white text-[26px] font-bold tracking-[-0.3px] mb-[10px] text-center">
+            {t("index.title")}
+          </Text>
 
-          <Text style={styles.subtitle}>
+          <Text className="text-[#B790CB] text-[15px] leading-[22px] text-center max-w-[280px] mb-6">
             {user
               ? `${t("index.loginedUs")} ${user.name}`
               : t("index.notLogined")}
           </Text>
 
           <Pressable onPress={() => AsyncStorage.clear()}>
-            <Text style={styles.resetText}>RESET STORAGE</Text>
+            <Text className="text-[#F87171] text-[12px] font-semibold tracking-[0.4px]">
+              RESET STORAGE
+            </Text>
           </Pressable>
         </View>
       </SafeAreaView>
     </View>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  /** ⬇️ ТОЧНО КАК В DREAMS */
-  root: {
-    flex: 1,
-    minHeight: "100vh" as any,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  /** ⬇️ ТОЧНО КАК В DREAMS */
-  safe: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-
-  /** ⬇️ ТОЧНО КАК В DREAMS */
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-
-    paddingHorizontal: theme.gap(3),
-    paddingVertical: theme.gap(4),
-  },
-
-  /** визуал (не влияет на layout) */
-  title: {
-    color: theme.colors.typography,
-    fontSize: 26,
-    fontWeight: "700",
-    letterSpacing: -0.3,
-    marginBottom: theme.gap(1.25),
-    textAlign: "center",
-  },
-
-  subtitle: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: theme.colors.dimmed,
-    textAlign: "center",
-    maxWidth: 280,
-    marginBottom: theme.gap(3),
-  },
-
-  resetText: {
-    fontSize: 12,
-    fontWeight: "600",
-    letterSpacing: 0.4,
-    color: theme.colors.danger,
-  },
-}));

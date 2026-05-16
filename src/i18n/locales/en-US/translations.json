@@ -33,15 +33,40 @@
   },
   "dreams": {
     "tab_name": "Dreams",
-    "title": "Dreams",
-    "inDevelopment": "This section is under development"
+    "title": "Dream Journal",
+    "subheading": "Your subconscious",
+    "inDevelopment": "This section is under development",
+    "emptyTitle": "No dreams yet",
+    "emptySubtitle": "Record your first dream and get a personal AI analysis",
+    "addFirst": "Record a dream",
+    "hintLucidTitle": "Lucid dreams",
+    "hintLucidDesc": "Capture details right after waking up",
+    "hintAiTitle": "AI analysis",
+    "hintAiDesc": "Symbols, emotions and hidden meanings"
   },
   "profile": {
     "tab_name": "Profile",
+    "title": "Profile",
     "notLoggedIn": "You are not logged in",
     "balance": "Balance",
     "login": "Log in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "logoutAccount": "Log out",
+    "heroTitle": "Unlock Your Inner World",
+    "heroSubtitle": "Join a community of dreamers exploring their subconscious with AI",
+    "beginJourney": "Begin Your Journey",
+    "freePlan": "Free Plan",
+    "premiumDesc": "Unlock unlimited AI analysis and interpretations.",
+    "upgrade": "Upgrade",
+    "preferences": "Preferences",
+    "language": "Language",
+    "timezone": "Timezone",
+    "notifications": "Notifications",
+    "dataPrivacy": "Data & Privacy",
+    "exportJournal": "Export journal",
+    "importData": "Import data",
+    "privacy": "Privacy",
+    "version": "Version {{ver}}"
   },
 
   "authLogin": {

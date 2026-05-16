@@ -4,7 +4,14 @@ import NetInfo from "@react-native-community/netinfo";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Animated, Pressable, Text, View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
+
+const NEON_SHADOW = {
+  shadowColor: "#A60DF2",
+  shadowOpacity: 0.6,
+  shadowRadius: 20,
+  shadowOffset: { width: 0, height: 0 },
+  elevation: 10,
+} as const;
 
 export default function OfflineScreen() {
   const router = useRouter();
@@ -21,23 +28,28 @@ export default function OfflineScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#1C1022] items-center justify-center px-6 pb-8">
       {/* Icon */}
-      <View style={styles.iconWrapper}>
+      <View className="items-center justify-center mb-8">
         <Ionicons name="wifi" size={100} color="#A60DF2" />
       </View>
 
       {/* Text */}
-      <View style={styles.textBlock}>
-        <Text style={styles.title}>{t("offline.title")}</Text>
-        <Text style={styles.subtitle}>{t("offline.subtitle")}</Text>
+      <View className="items-center gap-3 max-w-[300px] mb-8">
+        <Text className="text-2xl font-bold text-white tracking-[-0.5px] text-center">
+          {t("offline.title")}
+        </Text>
+        <Text className="text-[15px] text-[#B790CB] text-center leading-[22px]">
+          {t("offline.subtitle")}
+        </Text>
       </View>
 
       {/* Buttons */}
-      <View style={styles.buttons}>
+      <View className="w-full max-w-[360px] gap-3">
         <Animated.View style={{ transform: [{ scale: retryAnim.scale }] }}>
           <Pressable
-            style={styles.primaryButton}
+            className="flex-row items-center justify-center gap-2 bg-[#A60DF2] py-4 rounded-full"
+            style={NEON_SHADOW}
             onPress={handleRetry}
             onPressIn={retryAnim.pressIn}
             onPressOut={retryAnim.pressOut}
@@ -45,20 +57,22 @@ export default function OfflineScreen() {
             onHoverOut={retryAnim.hoverOut}
           >
             <Ionicons name="refresh-outline" size={20} color="#fff" />
-            <Text style={styles.primaryButtonText}>{t("offline.retry")}</Text>
+            <Text className="text-white text-base font-bold">
+              {t("offline.retry")}
+            </Text>
           </Pressable>
         </Animated.View>
 
         <Animated.View style={{ transform: [{ scale: savedAnim.scale }] }}>
           <Pressable
-            style={styles.secondaryButton}
+            className="flex-row items-center justify-center gap-2 bg-white/5 py-4 rounded-full border border-white/8"
             onPressIn={savedAnim.pressIn}
             onPressOut={savedAnim.pressOut}
             onHoverIn={savedAnim.hoverIn}
             onHoverOut={savedAnim.hoverOut}
           >
             <Ionicons name="book-outline" size={20} color="#B790CB" />
-            <Text style={styles.secondaryButtonText}>
+            <Text className="text-[#B790CB] text-[15px] font-medium">
               {t("offline.savedDreams")}
             </Text>
           </Pressable>
@@ -67,74 +81,3 @@ export default function OfflineScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: theme.gap(3),
-    paddingBottom: theme.gap(4),
-  },
-  iconWrapper: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: theme.gap(4),
-  },
-  textBlock: {
-    alignItems: "center",
-    gap: theme.gap(1.5),
-    maxWidth: 300,
-    marginBottom: theme.gap(4),
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: theme.colors.typography,
-    letterSpacing: -0.5,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 15,
-    color: theme.colors.dimmed,
-    textAlign: "center",
-    lineHeight: 22,
-  },
-  buttons: {
-    width: "100%",
-    maxWidth: 360,
-    gap: theme.gap(1.5),
-  },
-  primaryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: theme.gap(1),
-    backgroundColor: theme.colors.tint,
-    paddingVertical: theme.gap(2),
-    borderRadius: theme.radius.full,
-    ...theme.shadows.neon,
-  },
-  primaryButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  secondaryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: theme.gap(1),
-    backgroundColor: theme.colors.surfaceTranslucent,
-    paddingVertical: theme.gap(2),
-    borderRadius: theme.radius.full,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  secondaryButtonText: {
-    color: theme.colors.dimmed,
-    fontSize: 15,
-    fontWeight: "500",
-  },
-}));

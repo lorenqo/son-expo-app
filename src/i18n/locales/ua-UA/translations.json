@@ -34,15 +34,40 @@
   },
   "dreams": {
     "tab_name": "Сни",
-    "title": "Сни",
-    "inDevelopment": "Розділ знаходиться у розробці"
+    "title": "Щоденник снів",
+    "subheading": "Ваша підсвідомість",
+    "inDevelopment": "Розділ знаходиться у розробці",
+    "emptyTitle": "Снів поки немає",
+    "emptySubtitle": "Запишіть свій перший сон і отримайте персональний аналіз від ШІ",
+    "addFirst": "Записати сон",
+    "hintLucidTitle": "Усвідомлені сни",
+    "hintLucidDesc": "Фіксуйте деталі одразу після пробудження",
+    "hintAiTitle": "ШІ-аналіз",
+    "hintAiDesc": "Символи, емоції та приховані смисли"
   },
   "profile": {
     "tab_name": "Профіль",
+    "title": "Профіль",
     "notLoggedIn": "Ви не увійшли",
     "balance": "Баланс",
     "login": "Увійти",
-    "logout": "Вийти"
+    "logout": "Вийти",
+    "logoutAccount": "Вийти з акаунту",
+    "heroTitle": "Відкрийте свій внутрішній світ",
+    "heroSubtitle": "Приєднуйтесь до спільноти тих, хто досліджує свої сни за допомогою ШІ",
+    "beginJourney": "Почати подорож",
+    "freePlan": "Free Plan",
+    "premiumDesc": "Розблокуйте безлімітний ШІ-аналіз та тлумачення.",
+    "upgrade": "Оновити",
+    "preferences": "Налаштування",
+    "language": "Мова",
+    "timezone": "Часовий пояс",
+    "notifications": "Сповіщення",
+    "dataPrivacy": "Дані та Приватність",
+    "exportJournal": "Експорт журналу",
+    "importData": "Імпорт даних",
+    "privacy": "Приватність",
+    "version": "Версія {{ver}}"
   },
 
   "authLogin": {

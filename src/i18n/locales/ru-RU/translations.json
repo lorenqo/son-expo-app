@@ -34,15 +34,40 @@
   },
   "dreams": {
     "tab_name": "Сны",
-    "title": "Сны",
-    "inDevelopment": "Раздел находится в разработке"
+    "title": "Журнал снов",
+    "subheading": "Ваше подсознание",
+    "inDevelopment": "Раздел находится в разработке",
+    "emptyTitle": "Снов пока нет",
+    "emptySubtitle": "Запишите свой первый сон и получите персональный анализ от ИИ",
+    "addFirst": "Записать сон",
+    "hintLucidTitle": "Осознанные сны",
+    "hintLucidDesc": "Фиксируйте детали сразу после пробуждения",
+    "hintAiTitle": "ИИ-анализ",
+    "hintAiDesc": "Символы, эмоции и скрытые смыслы"
   },
   "profile": {
     "tab_name": "Профиль",
+    "title": "Профиль",
     "notLoggedIn": "Вы не вошли",
     "balance": "Баланс",
     "login": "Войти",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "logoutAccount": "Выйти из аккаунта",
+    "heroTitle": "Откройте свой внутренний мир",
+    "heroSubtitle": "Присоединяйтесь к сообществу тех, кто исследует свои сны с помощью ИИ",
+    "beginJourney": "Начать путешествие",
+    "freePlan": "Free Plan",
+    "premiumDesc": "Разблокируйте безлимитный ИИ-анализ и толкования.",
+    "upgrade": "Обновить",
+    "preferences": "Предпочтения",
+    "language": "Язык",
+    "timezone": "Часовой пояс",
+    "notifications": "Уведомления",
+    "dataPrivacy": "Данные и Приватность",
+    "exportJournal": "Экспорт журнала",
+    "importData": "Импорт данных",
+    "privacy": "Приватность",
+    "version": "Версия {{ver}}"
   },
 
   "authLogin": {
