@@ -1,7 +1,10 @@
 import { PickerRow } from "@/components/ui/picker-row";
+import { usePremium } from "@/store/usePremium";
 import "@/src/i18n";
 import { useScreenAnimation } from "@/hooks/useScreenAnimation";
 import { logout } from "@/store/authStore";
+import { refreshPremium } from "@/store/purchasesStore";
+import Purchases from "react-native-purchases";
 import { useAuth } from "@/store/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -71,6 +74,7 @@ function usePressScale(to = 0.96) {
 
 export default function Profile() {
   const { user, hydrated } = useAuth();
+  const { isPremium } = usePremium();
   const { t, i18n } = useTranslation();
 
   const [notifEnabled, setNotifEnabled] = useState(false);
@@ -253,16 +257,22 @@ export default function Profile() {
                   {user.name}
                 </Text>
                 <Text className="text-sm text-white/60">{user.email}</Text>
-                <View className="bg-white/10 px-2.5 py-0.5 rounded-full self-start mt-1">
-                  <Text className="text-xs font-medium text-white/80">
-                    {t("profile.freePlan")}
+                <View
+                  className="px-2.5 py-0.5 rounded-full self-start mt-1"
+                  style={isPremium
+                    ? { backgroundColor: "rgba(166,13,242,0.2)", borderWidth: 1, borderColor: "rgba(166,13,242,0.4)" }
+                    : { backgroundColor: "rgba(255,255,255,0.1)" }
+                  }
+                >
+                  <Text className="text-xs font-medium" style={{ color: isPremium ? "#A60DF2" : "rgba(255,255,255,0.8)" }}>
+                    {isPremium ? "Premium" : t("profile.freePlan")}
                   </Text>
                 </View>
               </View>
             </View>
 
-            {/* Premium card */}
-            <LinearGradient
+            {/* Premium card — скрыта если уже Premium */}
+            {!isPremium && <LinearGradient
               colors={["#3c2249", "#2b1834"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -293,6 +303,7 @@ export default function Profile() {
                   }}
                   onPressIn={premiumScale.pressIn}
                   onPressOut={premiumScale.pressOut}
+                  onPress={() => router.push("/paywall")}
                 >
                   <Text className="text-white text-sm font-semibold">
                     {t("profile.upgrade")}
@@ -300,7 +311,7 @@ export default function Profile() {
                   <Ionicons name="arrow-forward" size={14} color="white" />
                 </Pressable>
               </Animated.View>
-            </LinearGradient>
+            </LinearGradient>}
 
             {/* Preferences */}
             <View className="gap-2">
@@ -477,6 +488,18 @@ export default function Profile() {
               <Text className="text-center text-xs text-white/20 mt-2">
                 {t("profile.version", { ver: "1.0.0" })}
               </Text>
+
+              {__DEV__ && (
+                <Pressable
+                  className="mt-2 items-center py-2"
+                  onPress={async () => {
+                    await Purchases.logIn("dev-user-" + Date.now());
+                    await refreshPremium();
+                  }}
+                >
+                  <Text className="text-xs text-orange-400">DEV: сбросить Premium</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </ScrollView>

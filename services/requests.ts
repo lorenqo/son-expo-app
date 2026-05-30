@@ -53,6 +53,10 @@ export async function registerRequest(
   const response = await fetch(`${apiUrl}/rest/v1/users`, {
     method: "POST",
     body: formData,
+    headers: {
+      "User-Agent":
+        process.env.EXPO_PUBLIC_USER_AGENT ?? "DreamApp/1.0 ReactNative",
+    },
   });
 
   const data = await response.json();
@@ -74,6 +78,8 @@ export async function checkEmail(email: string) {
     method: "GET",
     headers: {
       Accept: "application/json",
+      "User-Agent":
+        process.env.EXPO_PUBLIC_USER_AGENT ?? "DreamApp/1.0 ReactNative",
     },
   });
 
@@ -95,6 +101,8 @@ export async function logoutRequest() {
     headers: {
       Accept: "application/json",
       Host: "xander-le.work",
+      "User-Agent":
+        process.env.EXPO_PUBLIC_USER_AGENT ?? "DreamApp/1.0 ReactNative",
     },
   });
 }

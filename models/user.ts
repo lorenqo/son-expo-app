@@ -14,6 +14,6 @@ export function createUser(raw: any): User {
     name: raw.name,
     balance: raw.balance,
     pic: raw.pic ?? undefined,
-    isGuest: raw.boolean,
+    isGuest: raw.isGuest ?? false,
   }
 }

@@ -20,10 +20,12 @@ const RTL_LANGUAGES: string[] = []
 
 const LANGUAGE_KEY = '@app_language'
 
+const isServer = typeof window === 'undefined'
+
 const initI18n = async () => {
   try {
     // Try to get saved language preference
-    const savedLanguage = await AsyncStorage.getItem(LANGUAGE_KEY)
+    const savedLanguage = isServer ? null : await AsyncStorage.getItem(LANGUAGE_KEY)
 
     // Determine which language to use
     let selectedLanguage = savedLanguage
@@ -73,7 +75,7 @@ const initI18n = async () => {
     })
 
     // Save the selected language
-    if (!savedLanguage) {
+    if (!savedLanguage && !isServer) {
       await AsyncStorage.setItem(LANGUAGE_KEY, selectedLanguage)
     }
   } catch (error) {

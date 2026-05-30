@@ -6,6 +6,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import "../global.css";
 import { hydrateAuth, logout, syncUser } from "../store/authStore";
+import { initPurchases } from "../store/purchasesStore";
 import ConnectionGuard from "./ConnectionGuard";
 
 export default function RootLayout() {
@@ -25,6 +26,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     const run = async () => {
+      await initPurchases();
       await initCookies();
       await hydrateAuth();
       await checkAuth();
@@ -55,6 +57,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="chat" options={{ animation: "fade" }} />
+        <Stack.Screen name="paywall" options={{ presentation: "modal", animation: "fade" }} />
         <Stack.Screen
           name="(auth)"
           options={{

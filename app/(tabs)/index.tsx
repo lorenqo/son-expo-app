@@ -1,10 +1,38 @@
 import { useAuth } from "@/store/useAuth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { ErrorBoundaryProps, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+async function sendTestNotification() {
+  if (Platform.OS === "web") {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      new Notification("Dream App 🌙", { body: "Не забудь записать свой сон сегодня!" });
+    }
+    return;
+  }
+  const { status } = await Notifications.requestPermissionsAsync();
+  if (status !== "granted") return;
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Dream App 🌙",
+      body: "Не забудь записать свой сон сегодня!",
+    },
+    trigger: null,
+  });
+}
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
@@ -49,6 +77,17 @@ export default function Index() {
               RESET STORAGE
             </Text>
           </Pressable>
+
+          {__DEV__ && (
+            <Pressable
+              onPress={sendTestNotification}
+              className="mt-4 px-5 py-2.5 rounded-full bg-[#A60DF2]/20 border border-[#A60DF2]/40"
+            >
+              <Text className="text-[#A60DF2] text-[12px] font-semibold">
+                DEV: тест уведомления
+              </Text>
+            </Pressable>
+          )}
         </View>
       </SafeAreaView>
     </View>

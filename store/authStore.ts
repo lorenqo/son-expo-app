@@ -1,5 +1,6 @@
 import type { User } from "@/models/user";
 import { removeCookies } from "@/services/cookies";
+import { loginPurchases, logoutPurchases } from "@/store/purchasesStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Store } from "@tanstack/store";
 import { Platform } from "react-native";
@@ -41,6 +42,7 @@ export async function hydrateAuth() {
 export async function login(user: User) {
   authStore.setState((s) => ({ ...s, user }));
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  await loginPurchases(String(user.id));
 }
 
 // 🚪 логаут
@@ -52,10 +54,11 @@ export async function logout() {
   } else
     document.cookie.split(";").forEach((c) => {
       const name = c.split("=")[0].trim();
-      document.cookie = `${name}=; Max-Age=0; path=/; domain=.xander-le.work;`;
+      document.cookie = `${name}=; Max-Age=0; path=/; domain=${process.env.EXPO_PUBLIC_COOKIE_DOMAIN};`;
     });
 
   console.log("cookies deleted");
+  await logoutPurchases();
 }
 
 export async function syncUser(user: User) {
@@ -65,4 +68,5 @@ export async function syncUser(user: User) {
   });
 
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  await loginPurchases(String(user.id));
 }

@@ -3,19 +3,14 @@
     "skip": "Skip",
     "next": "Next",
     "start": "Start",
-
     "slide1_title": "Your personal\ndream journal",
     "slide1_desc": "Write down your dreams right after waking up so you don't miss a single detail.",
-
     "slide2_title": "Deep AI analysis",
     "slide2_desc": "The algorithm helps find connections between symbols and emotions.",
-
     "slide3_title": "Instant search",
     "slide3_desc": "Return to past dreams and discover the meanings of symbols.",
-
     "slide4_title": "Your dreams are only yours",
     "slide4_desc": "We care about privacy and data security.",
-
     "slide5_title": "Don't miss what's important",
     "slide5_desc": "Allow notifications to receive reminders to record dreams after waking up.",
     "slide5_hint": "You can change this later in settings"
@@ -68,21 +63,16 @@
     "privacy": "Privacy",
     "version": "Version {{ver}}"
   },
-
   "authLogin": {
     "title": "Sign in to Dreambook AI",
     "subtitle": "Unlock the secrets of your dreams with artificial intelligence",
-
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
-
     "login": "Sign in",
     "register": "Sign up",
     "continueAsGuest": "Continue as guest",
     "forgotPassword": "Forgot password?",
-
     "divider": "Or sign in with",
-
     "errorEmptyFields": "Please fill in all fields",
     "errorWrongLoginData": "Incorrect email or password",
     "errorServer": "Server error. Please try again later",
@@ -92,21 +82,15 @@
     "and": "and",
     "privacy": "Privacy Policy"
   },
-
   "authRegister": {
     "title": "Sign up",
     "subtitle": "Start your journey into conscious dreaming",
-
     "namePlaceholder": "Your name",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Create a password",
-
     "createAccount": "Create account",
-
     "divider": "Or sign in with",
-
     "passwordHint": "The password must be at least 6 characters long and contain numbers and Latin letters.",
-
     "errorEmptyFields": "Please fill in all fields",
     "errorWrongLoginData": "Incorrect email or password",
     "errorServer": "Server error. Please try again later",
@@ -121,5 +105,31 @@
     "subtitle": "Connection to the dream world has been lost. Check your internet connection to continue interpretation.",
     "retry": "Try again",
     "savedDreams": "Go to saved dreams"
+  },
+  "paywall": {
+    "title": "Unlock Your Inner Vision",
+    "subtitle": "Experience the full depth of your subconscious with our premium dream exploration tools.",
+    "saveBadge": "Save 33%",
+    "yearlyTitle": "Yearly Journey",
+    "yearlyDesc": "Full year of enlightenment",
+    "yearlyPrice": "$79.99",
+    "yearlyPer": "per year",
+    "monthlyTitle": "Monthly Access",
+    "monthlyDesc": "Flexible exploration",
+    "monthlyPrice": "$9.99",
+    "monthlyPer": "per month",
+    "benefit1": "Unlimited AI Interpretations",
+    "benefit2": "Lucid Dreaming Guide",
+    "benefit3": "Ad-free Experience",
+    "benefit4": "Cloud Sync Across Devices",
+    "subscribe": "Subscribe Now",
+    "restore": "Restore Purchase",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "webOnly": "Purchases are available on mobile only.",
+    "noPackages": "No packages available.",
+    "purchaseFailed": "Purchase failed",
+    "restoreFailed": "Restore failed",
+    "tryAgain": "Please try again."
   }
 }
